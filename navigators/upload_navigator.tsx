@@ -1,0 +1,16 @@
+import React, { FC } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import UploadScreen from "../screens/upload/upload_screen";
+
+const Stack = createNativeStackNavigator();
+
+const UploadNavigator: FC<{ navigation: any }> = ({ navigation }) => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="UploadScreen" component={UploadScreen} options={{headerTitle: "Upload"}}/>
+    </Stack.Navigator>
+  );
+};
+
+export default UploadNavigator;
