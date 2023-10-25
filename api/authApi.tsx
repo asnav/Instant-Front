@@ -11,7 +11,7 @@ const register = async (data: RegisterInterface) => {
 };
 
 export interface LoginInterface {
-  credentials: string;
+  identifier: string;
   password: string;
 }
 
@@ -20,19 +20,13 @@ const login = async (data: LoginInterface) => {
 };
 
 const refresh = async (refreshToken: string) => {
-  return apiClient.get(`/auth/refresh`, {
-    headers: {
-      Authorization: "JWT " + refreshToken,
-    },
-  });
+  apiClient.setHeader("Authorization", `JWT ${refreshToken}`);
+  return apiClient.get(`/auth/refresh`);
 };
 
-const logout = async (token: string) => {
-  return apiClient.get(`/auth/logout`, {
-    headers: {
-      Authorization: "JWT " + token,
-    },
-  });
+const logout = async (refreshToken: string) => {
+  apiClient.setHeader("Authorization", `JWT ${refreshToken}`);
+  return apiClient.get(`/auth/logout`);
 };
 
 export default { register, login, refresh, logout };

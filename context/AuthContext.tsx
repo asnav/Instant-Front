@@ -1,5 +1,5 @@
 import React, { createContext, FC, useEffect, useState } from "react";
-import SecureStore from "expo-secure-store";
+import * as SecureStore from "expo-secure-store";
 
 import apiClient from "../api/clientApi";
 import authApi, { RegisterInterface, LoginInterface } from "../api/authApi";
@@ -17,8 +17,10 @@ type AuthContextType = {
   splashLoading: boolean;
   userData?: User;
   authData?: AuthData;
-  register: (userDetails: RegisterInterface) => Promise<true | string> | null;
-  login: (userDetails: LoginInterface) => Promise<true | string> | null;
+  register: (
+    userDetails: RegisterInterface
+  ) => Promise<undefined | string> | null;
+  login: (userDetails: LoginInterface) => Promise<undefined | string> | null;
   logout: () => void;
   toggleLoading: () => void;
   editUserInfo: (userId: string, data: EditUserInterface) => void;
@@ -44,54 +46,53 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
   const register = async (
     userDetails: RegisterInterface
-  ): Promise<true | string> => {
+  ): Promise<undefined | string> => {
     setIsLoading(true);
     const res = await authApi.register(userDetails);
 
-    const data: any = res?.data;
-    if (data?.err) {
+    const data: AuthData | any = res.data;
+    if (!res.ok) {
       setIsLoading(false);
-      return data.err as string;
+      return data.message as string;
     }
 
     setIsLoading(false);
-    return true;
+    return undefined;
   };
 
-  const login = async (userDetails: LoginInterface) => {
+  const login = async (
+    userDetails: LoginInterface
+  ): Promise<undefined | string> => {
     setIsLoading(true);
     const res = await authApi.login(userDetails);
 
     const data: AuthData | any = res.data;
 
-    if (data.err) {
+    if (!res.ok) {
       setIsLoading(false);
-      return data.err as string;
+      return data.message as string;
     }
 
-    const [userRes] = await Promise.all([
-      userApi.getUser(data.userId),
-      SecureStore.setItemAsync("authData", data),
-    ]);
-    setUserData(userRes.data as User);
+    // const [userRes] = await Promise.all([
+    // userApi.getUser(data.userId),
+    await SecureStore.setItemAsync("authData", JSON.stringify(data));
+
+    // ]);
+    // setUserData(userRes.data as User);
     setAuthData(data);
 
     apiClient.setHeader("Authorization", `JWT ${data.accessToken}`);
 
     setIsLoading(false);
-    return true;
+    return undefined;
   };
 
   const logout = async () => {
     setIsLoading(true);
-
-    await Promise.all([
-      authApi.logout(authData ? authData.refreshToken : ""),
-      SecureStore.deleteItemAsync("authData"),
-    ]);
-
+    await authApi.logout(authData ? authData.refreshToken : "");
+    await SecureStore.deleteItemAsync("authData");
     setIsLoading(false);
-    setAuthData({ accessToken: "", refreshToken: "", userId: "" });
+    setAuthData(undefined);
   };
 
   const isLoggedIn = async () => {

@@ -1,8 +1,13 @@
+const usernameValidator = (username: string) => {
+  if (!username) return "Username can't be empty.";
+  return undefined;
+};
+
 const emailValidator = (email: string) => {
   const re = /\S+@\S+\.\S+/;
   if (!email) return "Email can't be empty.";
   if (!re.test(email)) return "Ooops! We need a valid email address.";
-  return "";
+  return undefined;
 };
 
 const strongPasswordValidator = (password: string) => {
@@ -13,7 +18,7 @@ const strongPasswordValidator = (password: string) => {
     return "Password must contain at least one uppercase letter";
   if (password.search(/[0-9]/) < 0)
     return "Password must contain at least one number";
-  return "";
+  return undefined;
 };
 
-export default { emailValidator, strongPasswordValidator };
+export default { usernameValidator, emailValidator, strongPasswordValidator };
