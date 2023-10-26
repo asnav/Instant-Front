@@ -8,7 +8,7 @@ const theme = {
     primary: "#e6464e",
     secondary: "#414757",
     error: "#f13a59",
-    caption: "#E8E2E2",
+    textField: "#E8E2E2",
     lightGrey: "#EFF5F5",
     darkGrey: "#B2B2B2",
   },

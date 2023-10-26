@@ -9,7 +9,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Ionicons } from "@expo/vector-icons";
 import theme from "../../core/theme";
 import Header from "../../components/Header";
 import { AuthContext } from "../../context/AuthContext";
@@ -29,6 +29,9 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string>();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleShowPassword = () => setShowPassword(showPassword ? false : true);
 
   const onRegisterCallback = async () => {
     let err: string | undefined;
@@ -60,30 +63,62 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <Header>Nice to meet you 🥹</Header>
-      <TextInput
-        style={styles.input}
-        onChangeText={setUsername}
-        value={username}
-        placeholder={"Username"}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setEmail}
-        value={email}
-        placeholder={"Email"}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setPassword}
-        value={password}
-        placeholder={"Password"}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setRepeatPassword}
-        value={repeatPassword}
-        placeholder={"Repeat Password"}
-      />
+      <View style={styles.field}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setUsername}
+          value={username}
+          placeholder={"Username"}
+          autoCapitalize={"none"}
+        />
+      </View>
+      <View style={styles.field}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setEmail}
+          value={email}
+          placeholder={"Email"}
+          autoCapitalize={"none"}
+          autoComplete="email"
+          inputMode="email"
+        />
+      </View>
+      <View style={styles.field}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setPassword}
+          value={password}
+          placeholder={"Password"}
+          autoCapitalize={"none"}
+          autoComplete="current-password"
+          secureTextEntry={!showPassword}
+        />
+        <Ionicons
+          name={showPassword ? "eye-off-outline" : "eye-outline"}
+          size={24}
+          color="#aaa"
+          style={styles.icon}
+          onPress={toggleShowPassword}
+        />
+      </View>
+      <View style={styles.field}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setRepeatPassword}
+          value={repeatPassword}
+          placeholder={"Repeat Password"}
+          autoCapitalize={"none"}
+          autoComplete={Platform.OS === "ios" ? "password-new" : "new-password"}
+          secureTextEntry={!showPassword}
+        />
+        <Ionicons
+          name={showPassword ? "eye-off-outline" : "eye-outline"}
+          size={24}
+          color="#aaa"
+          style={styles.icon}
+          onPress={toggleShowPassword}
+        />
+      </View>
       {error && (
         <View>
           <Text style={styles.error}>{error}</Text>
@@ -113,13 +148,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  input: {
+  field: {
     width: "75%",
-    height: 50,
-    margin: 11,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: theme.colors.textField,
+    borderRadius: 8,
     borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
+    borderColor: theme.colors.darkGrey,
+    paddingHorizontal: 14,
+    marginVertical: 12,
+  },
+  input: {
+    flex: 1,
+    color: "#333",
+    paddingVertical: 10,
+    paddingRight: 10,
+    fontSize: 16,
+  },
+  icon: {
+    marginLeft: 10,
   },
   error: {
     textAlign: "center",
@@ -142,7 +190,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   navigationButton: {
-    margin: 12,
+    padding: 12,
+    paddingBottom: 16,
   },
   navigationText: {
     color: theme.colors.secondary,
