@@ -1,27 +1,22 @@
 import { useState, FC, useContext } from "react";
 import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
-import Header from "../../components/Header";
 import { AuthContext } from "../../context/AuthContext";
+
+import Header from "../../components/auth/Header";
 import validators from "../../utils/validators";
 import NavigationLink from "../../components/auth/NavigationLink";
 import SubmitButton from "../../components/auth/SubmitButton";
 import Error from "../../components/auth/Error";
 import TextField from "../../components/auth/TextField";
 
-const RegisterScreen: FC<{ route: any; navigation: any }> = ({
-  route,
-  navigation,
-}) => {
-  const { register, login, isLoading } = useContext(AuthContext);
+const RegisterScreen: FC<{ navigation: any }> = ({ navigation }) => {
+  const { register, login } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string>();
-
-  const [showPassword, setShowPassword] = useState(false);
-  const toggleShowPassword = () => setShowPassword(showPassword ? false : true);
 
   const onRegisterCallback = async () => {
     let err: string | undefined;

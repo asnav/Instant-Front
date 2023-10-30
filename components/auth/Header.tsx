@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, TextProps } from "react-native";
-import theme from "../core/theme";
+import theme from "../../core/theme";
 
 export default function Header(props: TextProps) {
   return (

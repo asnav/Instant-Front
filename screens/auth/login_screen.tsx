@@ -1,17 +1,15 @@
 import React, { FC, useContext, useState } from "react";
 import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
-import Header from "../../components/Header";
+import { AuthContext } from "../../context/AuthContext";
+
+import Header from "../../components/auth/Header";
 import TextField from "../../components/auth/TextField";
 import Error from "../../components/auth/Error";
 import SubmitButton from "../../components/auth/SubmitButton";
 import NavigationLink from "../../components/auth/NavigationLink";
-import { AuthContext } from "../../context/AuthContext";
 
-const LoginScreen: FC<{ route: any; navigation: any }> = ({
-  route,
-  navigation,
-}) => {
-  const { login, isLoading } = useContext(AuthContext);
+const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
+  const { login } = useContext(AuthContext);
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
