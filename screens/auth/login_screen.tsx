@@ -1,20 +1,11 @@
 import React, { FC, useContext, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import theme from "../../core/theme";
+import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import Header from "../../components/Header";
+import TextField from "../../components/auth/TextField";
+import Error from "../../components/auth/Error";
+import SubmitButton from "../../components/auth/SubmitButton";
+import NavigationLink from "../../components/auth/NavigationLink";
 import { AuthContext } from "../../context/AuthContext";
-
-// import StudentModel, { Student } from '../model/StudentModel';
-// import * as ImagePicker from 'expo-image-picker';
 
 const LoginScreen: FC<{ route: any; navigation: any }> = ({
   route,
@@ -25,9 +16,6 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
-
-  const [showPassword, setShowPassword] = useState(false);
-  const toggleShowPassword = () => setShowPassword(showPassword ? false : true);
 
   const onLoginCallback = async () => {
     if (identifier == "") return setError("Username or Email missing.");
@@ -43,65 +31,28 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
     >
       <Header>Welcome Back 😄</Header>
 
-      <View style={styles.field}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setIdentifier}
-          value={identifier}
-          placeholder={"Username or Email"}
-          autoCapitalize={"none"}
-          autoComplete="username"
-          inputMode="email"
-          editable={!isLoading}
-          selectTextOnFocus={!isLoading}
-        />
-      </View>
+      <TextField
+        onChangeText={setIdentifier}
+        value={identifier}
+        placeholder={"Username or Email"}
+        autoComplete="username"
+        inputMode="email"
+      />
 
-      <View style={styles.field}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder={"Password"}
-          autoCapitalize={"none"}
-          autoComplete="current-password"
-          secureTextEntry={!showPassword}
-          editable={!isLoading}
-          selectTextOnFocus={!isLoading}
-        />
-        <Ionicons
-          name={showPassword ? "eye-off-outline" : "eye-outline"}
-          size={24}
-          color="#aaa"
-          style={styles.icon}
-          onPress={toggleShowPassword}
-          disabled={isLoading}
-        />
-      </View>
+      <TextField
+        onChangeText={setPassword}
+        value={password}
+        placeholder={"Password"}
+        autoComplete="current-password"
+      />
 
-      {error && (
-        <View>
-          <Text style={styles.error}>{error}</Text>
-        </View>
-      )}
+      <Error>{error}</Error>
 
-      <View style={styles.buttonesContainer}>
-        <TouchableOpacity
-          onPress={onLoginCallback}
-          style={styles.button}
-          disabled={isLoading}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-      </View>
+      <SubmitButton onPress={onLoginCallback}>Login</SubmitButton>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Register")}
-        style={styles.navigationButton}
-        disabled={isLoading}
-      >
-        <Text style={styles.navigationText}>Don't have an account yet?</Text>
-      </TouchableOpacity>
+      <NavigationLink onPress={() => navigation.navigate("Register")}>
+        Don't have an account yet?
+      </NavigationLink>
     </KeyboardAvoidingView>
   );
 };
@@ -111,55 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  field: {
-    width: "75%",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: theme.colors.textField,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: theme.colors.darkGrey,
-    paddingHorizontal: 14,
-    marginVertical: 12,
-  },
-  input: {
-    flex: 1,
-    color: "#333",
-    paddingVertical: 10,
-    paddingRight: 10,
-    fontSize: 16,
-  },
-  icon: {
-    marginLeft: 10,
-  },
-  error: {
-    textAlign: "center",
-    color: theme.colors.error,
-    fontWeight: "bold",
-  },
-  buttonesContainer: {
-    flexDirection: "row",
-  },
-  button: {
-    width: "75%",
-    margin: 12,
-    padding: 12,
-    backgroundColor: theme.colors.primary,
-    borderRadius: 10,
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontWeight: "bold",
-  },
-  navigationButton: {
-    padding: 12,
-    paddingBottom: 16,
-  },
-  navigationText: {
-    color: theme.colors.secondary,
-    fontWeight: "bold",
   },
 });
 

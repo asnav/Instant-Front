@@ -1,22 +1,12 @@
 import { useState, FC, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import theme from "../../core/theme";
+import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import Header from "../../components/Header";
 import { AuthContext } from "../../context/AuthContext";
 import validators from "../../utils/validators";
-
-// import StudentModel, { Student } from '../model/StudentModel';
-// import * as ImagePicker from 'expo-image-picker';
+import NavigationLink from "../../components/auth/NavigationLink";
+import SubmitButton from "../../components/auth/SubmitButton";
+import Error from "../../components/auth/Error";
+import TextField from "../../components/auth/TextField";
 
 const RegisterScreen: FC<{ route: any; navigation: any }> = ({
   route,
@@ -63,96 +53,42 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <Header>Nice to meet you 🥹</Header>
-      <View style={styles.field}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setUsername}
-          value={username}
-          placeholder={"Username"}
-          autoCapitalize={"none"}
-          editable={!isLoading}
-          selectTextOnFocus={!isLoading}
-        />
-      </View>
-      <View style={styles.field}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setEmail}
-          value={email}
-          placeholder={"Email"}
-          autoCapitalize={"none"}
-          autoComplete="email"
-          inputMode="email"
-          editable={!isLoading}
-          selectTextOnFocus={!isLoading}
-        />
-      </View>
-      <View style={styles.field}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder={"Password"}
-          autoCapitalize={"none"}
-          autoComplete="current-password"
-          secureTextEntry={!showPassword}
-          editable={!isLoading}
-          selectTextOnFocus={!isLoading}
-        />
-        <Ionicons
-          name={showPassword ? "eye-off-outline" : "eye-outline"}
-          size={24}
-          color="#aaa"
-          style={styles.icon}
-          onPress={toggleShowPassword}
-          disabled={isLoading}
-        />
-      </View>
-      <View style={styles.field}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setRepeatPassword}
-          value={repeatPassword}
-          placeholder={"Repeat Password"}
-          autoCapitalize={"none"}
-          autoComplete={Platform.OS === "ios" ? "password-new" : "new-password"}
-          secureTextEntry={!showPassword}
-          editable={!isLoading}
-          selectTextOnFocus={!isLoading}
-        />
-        <Ionicons
-          name={showPassword ? "eye-off-outline" : "eye-outline"}
-          size={24}
-          color="#aaa"
-          style={styles.icon}
-          onPress={toggleShowPassword}
-          disabled={isLoading}
-        />
-      </View>
-      {error && (
-        <View>
-          <Text style={styles.error}>{error}</Text>
-        </View>
-      )}
-      <View style={styles.buttonesContainer}>
-        {/* <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
-                        <Text style={styles.buttonText}>CANCELL</Text>
-                    </TouchableOpacity> */}
-        <TouchableOpacity
-          onPress={onRegisterCallback}
-          style={styles.button}
-          disabled={isLoading}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Login")}
-        style={styles.navigationButton}
-        disabled={isLoading}
-      >
-        <Text style={styles.navigationText}>Already have an account?</Text>
-      </TouchableOpacity>
+
+      <TextField
+        onChangeText={setUsername}
+        value={username}
+        placeholder={"Username"}
+      />
+
+      <TextField
+        onChangeText={setEmail}
+        value={email}
+        placeholder={"Email"}
+        autoComplete="email"
+        inputMode="email"
+      />
+
+      <TextField
+        onChangeText={setPassword}
+        value={password}
+        placeholder={"Password"}
+        autoComplete="current-password"
+      />
+
+      <TextField
+        onChangeText={setRepeatPassword}
+        value={repeatPassword}
+        placeholder={"Repeat Password"}
+        autoComplete="current-password"
+      />
+
+      <Error>{error}</Error>
+
+      <SubmitButton onPress={onRegisterCallback}>Register</SubmitButton>
+
+      <NavigationLink onPress={() => navigation.navigate("Login")}>
+        Already have an account?
+      </NavigationLink>
     </KeyboardAvoidingView>
   );
 };
@@ -162,55 +98,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  field: {
-    width: "75%",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: theme.colors.textField,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: theme.colors.darkGrey,
-    paddingHorizontal: 14,
-    marginVertical: 12,
-  },
-  input: {
-    flex: 1,
-    color: "#333",
-    paddingVertical: 10,
-    paddingRight: 10,
-    fontSize: 16,
-  },
-  icon: {
-    marginLeft: 10,
-  },
-  error: {
-    textAlign: "center",
-    color: theme.colors.error,
-    fontWeight: "bold",
-  },
-  buttonesContainer: {
-    flexDirection: "row",
-  },
-  button: {
-    width: "75%",
-    margin: 12,
-    padding: 12,
-    backgroundColor: theme.colors.primary,
-    borderRadius: 10,
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontWeight: "bold",
-  },
-  navigationButton: {
-    padding: 12,
-    paddingBottom: 16,
-  },
-  navigationText: {
-    color: theme.colors.secondary,
-    fontWeight: "bold",
   },
 });
 

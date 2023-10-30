@@ -1,8 +1,10 @@
 import React from "react";
-import { StyleSheet, View, Text, TextProps } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
 import theme from "../core/theme";
+import { Props } from "react-native-paper/lib/typescript/components/Typography/Text";
 
-export default function Header(props: TextProps) {
+export default function Post(props: Props<Text>) {
   return (
     <View>
       <Text style={styles.header} {...props} />
