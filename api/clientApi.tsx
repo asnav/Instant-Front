@@ -1,8 +1,10 @@
 import { create } from "apisauce";
+import { baseURL } from "../constants/constants";
 
 const apiClient = create({
-  baseURL: "http://192.168.68.101:3000",
+  baseURL: baseURL,
   headers: { Accept: "application/vnd.github.v3+json" },
+  timeout: 3000,
 });
 
 export default apiClient;

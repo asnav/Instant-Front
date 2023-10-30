@@ -20,7 +20,7 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
   route,
   navigation,
 }) => {
-  const { login } = useContext(AuthContext);
+  const { login, isLoading } = useContext(AuthContext);
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +52,8 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
           autoCapitalize={"none"}
           autoComplete="username"
           inputMode="email"
+          editable={!isLoading}
+          selectTextOnFocus={!isLoading}
         />
       </View>
 
@@ -64,6 +66,8 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
           autoCapitalize={"none"}
           autoComplete="current-password"
           secureTextEntry={!showPassword}
+          editable={!isLoading}
+          selectTextOnFocus={!isLoading}
         />
         <Ionicons
           name={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -71,6 +75,7 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
           color="#aaa"
           style={styles.icon}
           onPress={toggleShowPassword}
+          disabled={isLoading}
         />
       </View>
 
@@ -81,7 +86,11 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
       )}
 
       <View style={styles.buttonesContainer}>
-        <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
+        <TouchableOpacity
+          onPress={onLoginCallback}
+          style={styles.button}
+          disabled={isLoading}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -89,6 +98,7 @@ const LoginScreen: FC<{ route: any; navigation: any }> = ({
       <TouchableOpacity
         onPress={() => navigation.navigate("Register")}
         style={styles.navigationButton}
+        disabled={isLoading}
       >
         <Text style={styles.navigationText}>Don't have an account yet?</Text>
       </TouchableOpacity>

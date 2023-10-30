@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   navigationButton: {
-    margin: 12,
+    padding: 12,
+    paddingBottom: 12,
   },
   navigationText: {
     color: theme.colors.secondary,

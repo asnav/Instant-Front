@@ -22,7 +22,7 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
   route,
   navigation,
 }) => {
-  const { register, login } = useContext(AuthContext);
+  const { register, login, isLoading } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -70,6 +70,8 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
           value={username}
           placeholder={"Username"}
           autoCapitalize={"none"}
+          editable={!isLoading}
+          selectTextOnFocus={!isLoading}
         />
       </View>
       <View style={styles.field}>
@@ -81,6 +83,8 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
           autoCapitalize={"none"}
           autoComplete="email"
           inputMode="email"
+          editable={!isLoading}
+          selectTextOnFocus={!isLoading}
         />
       </View>
       <View style={styles.field}>
@@ -92,6 +96,8 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
           autoCapitalize={"none"}
           autoComplete="current-password"
           secureTextEntry={!showPassword}
+          editable={!isLoading}
+          selectTextOnFocus={!isLoading}
         />
         <Ionicons
           name={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -99,6 +105,7 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
           color="#aaa"
           style={styles.icon}
           onPress={toggleShowPassword}
+          disabled={isLoading}
         />
       </View>
       <View style={styles.field}>
@@ -110,6 +117,8 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
           autoCapitalize={"none"}
           autoComplete={Platform.OS === "ios" ? "password-new" : "new-password"}
           secureTextEntry={!showPassword}
+          editable={!isLoading}
+          selectTextOnFocus={!isLoading}
         />
         <Ionicons
           name={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -117,6 +126,7 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
           color="#aaa"
           style={styles.icon}
           onPress={toggleShowPassword}
+          disabled={isLoading}
         />
       </View>
       {error && (
@@ -128,13 +138,18 @@ const RegisterScreen: FC<{ route: any; navigation: any }> = ({
         {/* <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
                         <Text style={styles.buttonText}>CANCELL</Text>
                     </TouchableOpacity> */}
-        <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
+        <TouchableOpacity
+          onPress={onRegisterCallback}
+          style={styles.button}
+          disabled={isLoading}
+        >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
         onPress={() => navigation.navigate("Login")}
         style={styles.navigationButton}
+        disabled={isLoading}
       >
         <Text style={styles.navigationText}>Already have an account?</Text>
       </TouchableOpacity>

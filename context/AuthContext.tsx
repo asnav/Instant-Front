@@ -51,9 +51,11 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
     const res = await authApi.register(userDetails);
 
     const data: AuthData | any = res.data;
+
     if (!res.ok) {
       setIsLoading(false);
-      return data.message as string;
+      if (data) return data.message as string;
+      else return "failed connecting to server";
     }
 
     setIsLoading(false);
@@ -70,7 +72,8 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
     if (!res.ok) {
       setIsLoading(false);
-      return data.message as string;
+      if (data) return data.message as string;
+      else return "failed connecting to server";
     }
 
     // const [userRes] = await Promise.all([
