@@ -8,11 +8,7 @@ const Stack = createNativeStackNavigator();
 const UploadNavigator: FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="UploadScreen"
-        component={UploadScreen}
-        options={{ headerTitle: "Upload" }}
-      />
+      <Stack.Screen name="UploadScreen" component={UploadScreen} />
     </Stack.Navigator>
   );
 };

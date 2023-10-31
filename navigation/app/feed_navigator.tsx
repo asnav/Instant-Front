@@ -11,7 +11,6 @@ const FeedNavigator: FC<{ navigation: any }> = ({ navigation }) => {
       <Stack.Screen
         name="FeedScreen"
         component={FeedScreen}
-        options={{ headerTitle: "Feed" }}
       />
     </Stack.Navigator>
   );

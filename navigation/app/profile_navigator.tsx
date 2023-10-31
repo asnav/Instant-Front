@@ -11,7 +11,6 @@ const ProfileNavigator: FC<{ navigation: any }> = ({ navigation }) => {
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
-        options={{ headerTitle: "Profile" }}
       />
     </Stack.Navigator>
   );
