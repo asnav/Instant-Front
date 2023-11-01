@@ -3,7 +3,7 @@ import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { AuthContext } from "../../context/AuthContext.tsx";
 
 import validators from "../../utils/validators.ts";
-import Header from "../../components/auth/Header.tsx";
+import Title from "../../components/auth/Title.tsx";
 import TextField from "../../components/auth/TextField.tsx";
 import Error from "../../components/auth/Error.tsx";
 import SubmitButton from "../../components/auth/SubmitButton.tsx";
@@ -46,8 +46,9 @@ const RegisterScreen: FC<{ navigation: any }> = ({ navigation }) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={-70}
     >
-      <Header>Nice to meet you 🥹</Header>
+      <Title>Nice to meet you 🥹</Title>
 
       <TextField
         onChangeText={setUsername}

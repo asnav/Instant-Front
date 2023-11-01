@@ -8,7 +8,11 @@ const Stack = createNativeStackNavigator();
 const FeedNavigator: FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="FeedScreen" component={FeedScreen} />
+      <Stack.Screen
+        name="FeedScreen"
+        component={FeedScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

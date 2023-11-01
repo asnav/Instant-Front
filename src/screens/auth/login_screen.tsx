@@ -2,7 +2,7 @@ import React, { FC, useContext, useState } from "react";
 import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { AuthContext } from "../../context/AuthContext.tsx";
 
-import Header from "../../components/auth/Header.tsx";
+import Title from "../../components/auth/Title.tsx";
 import TextField from "../../components/auth/TextField.tsx";
 import Error from "../../components/auth/Error.tsx";
 import SubmitButton from "../../components/auth/SubmitButton.tsx";
@@ -26,8 +26,9 @@ const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={-130}
     >
-      <Header>Welcome Back 😄</Header>
+      <Title>Welcome Back 😄</Title>
 
       <TextField
         onChangeText={setIdentifier}

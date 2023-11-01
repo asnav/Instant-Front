@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import theme from "../../core/theme.ts";
 
-export default function ChatNavigator(props: {
+export default function ChatItem(props: {
   title: String;
   onPress: () => void;
 }) {
@@ -21,15 +21,15 @@ export default function ChatNavigator(props: {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.secondary,
+    marginVertical: 5,
+    marginHorizontal: "2%",
+    borderRadius: 20,
     flexDirection: "row",
-    width: "100%",
-    borderColor: "lightgrey",
-    borderBottomWidth: 1,
   },
   text: {
     padding: 15,
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: "bold",
   },
   profilePicture: {

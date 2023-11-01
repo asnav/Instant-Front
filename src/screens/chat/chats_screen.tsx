@@ -1,18 +1,20 @@
 import React, { FC } from "react";
-import { FlatList, View } from "react-native";
-import ChatNavigator from "../../components/chats/ChatNavigator.tsx";
+import { FlatList, StyleSheet, View, Text } from "react-native";
+import ChatItem from "../../components/chats/ChatItem.tsx";
+import { Chat, getAllchats } from "../../models/Chat.ts";
 
 const ChatsScreen: FC<{ navigation: any }> = ({ navigation }) => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <Text style={styles.title}>Chats</Text>
       <FlatList
-        style={{ flex: 1 }}
-        data={[{ id: 1 }, { id: 2 }]}
-        keyExtractor={(obj: Object | any) => obj.id.toString()}
+        style={styles.list}
+        data={getAllchats()}
+        keyExtractor={(chat: Chat) => chat.userId.toString()}
         renderItem={({ item }) => (
-          <ChatNavigator
-            title={"Chat " + item.id.toString()}
-            onPress={() => navigation.push("Chat", { id: item.id })}
+          <ChatItem
+            title={item.username.toString()}
+            onPress={() => navigation.push("Chat", { id: item.userId })}
           />
         )}
       />
@@ -21,3 +23,20 @@ const ChatsScreen: FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 export default ChatsScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    flex: 1,
+  },
+  title: {
+    marginTop: 60,
+    marginLeft: 15,
+    fontSize: 33,
+    color: "black",
+    fontWeight: "bold",
+  },
+  list: {
+    paddingTop: 5,
+  },
+});

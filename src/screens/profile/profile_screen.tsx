@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   navigationText: {
-    color: theme.colors.secondary,
+    color: theme.colors.text,
     fontWeight: "bold",
   },
 });

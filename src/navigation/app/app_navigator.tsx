@@ -14,11 +14,11 @@ const Stack = createNativeStackNavigator();
 const AppNavigator: FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}
+>
         <Stack.Screen
           name="Tabs"
           component={TabNavigator}
-          options={{ headerShown: false }}
         />
         <Stack.Screen name="Chat" component={ChatScreen} />
       </Stack.Navigator>
@@ -36,7 +36,7 @@ const TabNavigator: FC = () => {
           if (route.name === "Feed")
             iconName = focused ? "ios-home" : "ios-home-outline";
           else if (route.name === "Upload")
-            iconName = focused ? "add-circle" : "add-circle-outline";
+            iconName = focused ? "arrow-up-circle" : "arrow-up-circle-outline";
           else if (route.name === "Chats")
             iconName = focused ? "ios-chatbubble" : "ios-chatbubble-outline";
           else if (route.name === "Profile")
@@ -56,11 +56,7 @@ const TabNavigator: FC = () => {
     >
       <Tab.Screen name="Feed" component={FeedNavigator} />
       <Tab.Screen name="Upload" component={UploadNavigator} />
-      <Tab.Screen
-        name="Chats"
-        component={ChatsScreen}
-        options={{ headerShown: true, headerTitleStyle: { fontSize: 20 } }}
-      />
+      <Tab.Screen name="Chats" component={ChatsScreen} />
       <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );
