@@ -32,10 +32,10 @@ export const AuthContext = createContext<AuthContextType>({
   splashLoading: false,
   register: (userDetails: RegisterInterface) => null,
   login: (userDetails: LoginInterface) => null,
-  editUserInfo: () => null,
-  getUserInfo: () => null,
   logout: () => {},
   toggleLoading: () => {},
+  editUserInfo: () => null,
+  getUserInfo: () => null,
 });
 
 export const AuthProvider: FC<{ children: any }> = ({ children }) => {
@@ -50,7 +50,7 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
     setIsLoading(true);
     const res = await authApi.register(userDetails);
 
-    const data: AuthData | any = res.data;
+    const data: any = res.data;
 
     if (!res.ok) {
       setIsLoading(false);
@@ -68,7 +68,7 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
     setIsLoading(true);
     const res = await authApi.login(userDetails);
 
-    const data: AuthData | any = res.data;
+    const data: any = res.data;
 
     if (!res.ok) {
       setIsLoading(false);
@@ -82,7 +82,7 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
     // ]);
     // setUserData(userRes.data as User);
-    setAuthData(data);
+    setAuthData(data as AuthData);
 
     apiClient.setHeader("Authorization", `JWT ${data.accessToken}`);
 
@@ -107,12 +107,24 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
       );
 
       if (fetchedAuthData) {
-        const authDataObject = JSON.parse(fetchedAuthData);
-        setAuthData(authDataObject);
-        apiClient.setHeader(
-          "Authorization",
-          `JWT ${authDataObject.accessToken}`
-        );
+        const authDataObject: AuthData = JSON.parse(fetchedAuthData);
+        const res = await authApi.refresh(authDataObject.refreshToken);
+
+        const data: any = res.data;
+
+        if (!res.ok) {
+          setSplashLoading(false);
+          return;
+        }
+
+        // const [userRes] = await Promise.all([
+        // userApi.getUser(data.userId),
+        await SecureStore.setItemAsync("authData", JSON.stringify(data));
+
+        // ]);
+        // setUserData(userRes.data as User);
+        setAuthData(data as AuthData);
+        apiClient.setHeader("Authorization", `JWT ${data.accessToken}`);
       }
 
       setSplashLoading(false);
@@ -140,13 +152,13 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
   const authContext: AuthContextType = {
     isLoading,
-    authData,
     splashLoading,
+    userData,
+    authData,
     register,
     login,
     logout,
     getUserInfo,
-    userData,
     editUserInfo,
     toggleLoading,
   };
