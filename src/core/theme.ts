@@ -1,12 +1,9 @@
-import { DefaultTheme } from "react-native-paper";
-
 const theme = {
-  ...DefaultTheme,
   colors: {
-    ...DefaultTheme.colors,
+    background: "#ffffff",
     text: "#000000",
     primary: "#e6464e",
-    secondary: "#414757",
+    secondary: "#f5f5f5",
     error: "#f13a59",
     textField: "#E8E2E2",
     lightGrey: "#EFF5F5",
