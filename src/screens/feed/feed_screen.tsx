@@ -2,11 +2,13 @@ import React, { FC } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
 import PostComponent from "../../components/posts/Post.tsx";
 import { getAllPosts, Post } from "../../models/Post.ts";
+import TabTitle from "../../components/TabTitle.tsx";
+import theme from "../../core/theme.ts";
 
 const FeedScreen: FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Feed</Text>
+      <TabTitle>Feed</TabTitle>
       <FlatList
         style={styles.list}
         data={getAllPosts()}
@@ -21,15 +23,8 @@ export default FeedScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.background,
     flex: 1,
-  },
-  title: {
-    marginTop: 60,
-    marginLeft: 15,
-    fontSize: 33,
-    color: "black",
-    fontWeight: "bold",
   },
   list: {
     paddingTop: 5,

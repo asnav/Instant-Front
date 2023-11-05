@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   text: {
-    color: theme.colors.secondary,
+    color: theme.colors.secondaryText,
     fontWeight: "bold",
   },
 });

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -6,14 +6,14 @@ import {
   TouchableOpacityProps,
   Text,
 } from "react-native";
-import theme from "../../core/theme.ts";
-import { AuthContext } from "../../context/AuthContext.tsx";
+import theme from "../core/theme.ts";
+import { AuthContext } from "../context/AuthContext.tsx";
 
 export default function SubmitButton(props: TouchableOpacityProps) {
   const { isLoading } = useContext(AuthContext);
 
   return (
-    <View style={styles.buttonesContainer}>
+    <View style={styles.buttonContainer}>
       <TouchableOpacity style={styles.button} disabled={isLoading} {...props}>
         <Text style={styles.text}>{props.children}</Text>
       </TouchableOpacity>
@@ -22,7 +22,7 @@ export default function SubmitButton(props: TouchableOpacityProps) {
 }
 
 const styles = StyleSheet.create({
-  buttonesContainer: {
+  buttonContainer: {
     flexDirection: "row",
   },
   button: {

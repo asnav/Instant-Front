@@ -1,13 +1,8 @@
-import React from "react";
-import { StyleSheet, View, Text, TextProps } from "react-native";
+import { StyleSheet, Text, TextProps } from "react-native";
 import theme from "../../core/theme.ts";
 
 export default function Title(props: TextProps) {
-  return (
-    <View>
-      <Text style={styles.title} {...props} />
-    </View>
-  );
+  return <Text style={styles.title} {...props} />;
 }
 
 const styles = StyleSheet.create({

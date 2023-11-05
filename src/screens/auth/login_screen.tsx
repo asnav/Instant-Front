@@ -4,12 +4,14 @@ import { AuthContext } from "../../context/AuthContext.tsx";
 
 import Title from "../../components/auth/Title.tsx";
 import TextField from "../../components/auth/TextField.tsx";
-import Error from "../../components/auth/Error.tsx";
-import SubmitButton from "../../components/auth/SubmitButton.tsx";
+import Error from "../../components/Error.tsx";
+import SubmitButton from "../../components/SubmitButton.tsx";
 import NavigationLink from "../../components/auth/NavigationLink.tsx";
+import LottieView from "lottie-react-native";
+import theme from "../../core/theme.ts";
 
 const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
-  const { login } = useContext(AuthContext);
+  const { login, isLoading } = useContext(AuthContext);
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +54,13 @@ const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
       <NavigationLink onPress={() => navigation.navigate("Register")}>
         Don't have an account yet?
       </NavigationLink>
+      {isLoading && (
+        <LottieView
+          style={styles.loading}
+          source={require("../../assets/loading.json")}
+          autoPlay
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -61,6 +70,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: theme.colors.background,
+  },
+  loading: {
+    width: 200,
+    position: "absolute",
   },
 });
 

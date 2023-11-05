@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { StyleSheet, View, TextInput, TextInputProps } from "react-native";
+import { AuthContext } from "../../context/AuthContext.tsx";
 import { Ionicons } from "@expo/vector-icons";
 import theme from "../../core/theme.ts";
-import { AuthContext } from "../../context/AuthContext.tsx";
 
 export default function TextField(props: TextInputProps) {
   const { isLoading } = useContext(AuthContext);
@@ -20,13 +20,14 @@ export default function TextField(props: TextInputProps) {
         secureTextEntry={!showPassword}
         editable={!isLoading}
         selectTextOnFocus={!isLoading}
+        enablesReturnKeyAutomatically
         {...props}
       />
       {props.autoComplete == "current-password" && (
         <Ionicons
           name={showPassword ? "eye-off-outline" : "eye-outline"}
           size={24}
-          color="#aaa"
+          color={theme.colors.darkGrey}
           style={styles.icon}
           onPress={toggleShowPassword}
           disabled={isLoading}
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: "#333",
+    color: theme.colors.text,
     paddingVertical: 10,
     paddingRight: 10,
     fontSize: 16,

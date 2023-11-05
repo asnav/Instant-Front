@@ -1,12 +1,14 @@
 import React, { FC, useContext } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import theme from "../../core/theme.ts";
 import { AuthContext } from "../../context/AuthContext.tsx";
+import TabTitle from "../../components/TabTitle.tsx";
+import theme from "../../core/theme.ts";
 
 const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
   return (
     <View style={styles.container}>
+      <TabTitle>Profile</TabTitle>
       <TouchableOpacity
         onPress={async () => logout()}
         style={styles.navigationButton}
@@ -20,15 +22,14 @@ const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: theme.colors.background,
   },
   navigationButton: {
     padding: 12,
-    paddingBottom: 12,
+    paddingBottom: 16,
   },
   navigationText: {
-    color: theme.colors.text,
+    color: theme.colors.secondaryText,
     fontWeight: "bold",
   },
 });

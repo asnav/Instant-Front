@@ -7,4 +7,6 @@ const apiClient = create({
   timeout: 3000,
 });
 
+apiClient.deleteHeader("Content-Type");
+
 export default apiClient;

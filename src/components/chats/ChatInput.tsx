@@ -21,7 +21,12 @@ export default function ChatInput(props: {
       <TextInput
         style={styles.input}
         value={props.value}
+        blurOnSubmit={false}
+        onSubmitEditing={props.onSend}
         onChangeText={props.onChangeText}
+        returnKeyType={"send"}
+        enablesReturnKeyAutomatically
+        // multiline
       />
       <Ionicons
         name={"send-outline"}
@@ -40,13 +45,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     width: "100%",
-    height: 70,
-    paddingBottom: 30,
+    height: 75,
+    paddingBottom: 35,
   },
   input: {
     width: "88%",
-    margin: 5,
-    borderRadius: 10,
+    marginVertical: 5,
+    marginLeft: 10,
+    paddingLeft: 10,
+    borderRadius: 14,
     backgroundColor: "white",
     color: "black",
     fontSize: 17,

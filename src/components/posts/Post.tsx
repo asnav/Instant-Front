@@ -3,12 +3,7 @@ import { StyleSheet, View, Image, Text, Dimensions } from "react-native";
 import theme from "../../core/theme.ts";
 import { Post } from "../../models/Post.ts";
 
-const { width, height } = Image.resolveAssetSource(
-  require("../../assets/cart.png")
-);
-const aspectRatio = height / width;
-
-const PostComponent: FC<{ post: Post }> = ({ post}) => {
+const PostComponent: FC<{ post: Post }> = ({ post }) => {
   return (
     <View style={styles.container}>
       <View style={styles.ownerContainer}>
@@ -18,13 +13,7 @@ const PostComponent: FC<{ post: Post }> = ({ post}) => {
         />
         <Text style={styles.username}>{post.ownerName}</Text>
       </View>
-      <Image
-        source={require("../../assets/cart.png")}
-        style={[
-          styles.image,
-          { height: Dimensions.get("window").width * aspectRatio },
-        ]}
-      />
+      <Image source={require("../../assets/plant.jpeg")} style={styles.image} />
       <Text style={styles.text}>{post.text}</Text>
     </View>
   );
@@ -43,7 +32,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    resizeMode: "contain",
+    height: "auto",
+    aspectRatio: 1,
   },
   ownerContainer: {
     flexDirection: "row",

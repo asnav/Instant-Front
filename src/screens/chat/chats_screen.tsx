@@ -1,12 +1,14 @@
-import React, { FC } from "react";
-import { FlatList, StyleSheet, View, Text } from "react-native";
-import ChatItem from "../../components/chats/ChatItem.tsx";
+import { FC } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import { Chat, getAllchats } from "../../models/Chat.ts";
+import ChatItem from "../../components/chats/ChatItem.tsx";
+import TabTitle from "../../components/TabTitle.tsx";
+import theme from "../../core/theme.ts";
 
 const ChatsScreen: FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Chats</Text>
+      <TabTitle>Chats</TabTitle>
       <FlatList
         style={styles.list}
         data={getAllchats()}
@@ -26,15 +28,8 @@ export default ChatsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.background,
     flex: 1,
-  },
-  title: {
-    marginTop: 60,
-    marginLeft: 15,
-    fontSize: 33,
-    color: "black",
-    fontWeight: "bold",
   },
   list: {
     paddingTop: 5,

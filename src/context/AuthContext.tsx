@@ -1,5 +1,6 @@
 import React, { createContext, FC, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import * as SplashScreen from "expo-splash-screen";
 
 import apiClient from "../api/clientApi.ts";
 import authApi, { RegisterInterface, LoginInterface } from "../api/authApi.ts";
@@ -14,7 +15,6 @@ type AuthData = {
 
 type AuthContextType = {
   isLoading: boolean;
-  splashLoading: boolean;
   userData?: User;
   authData?: AuthData;
   register: (
@@ -29,7 +29,6 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
   isLoading: false,
-  splashLoading: false,
   register: (userDetails: RegisterInterface) => null,
   login: (userDetails: LoginInterface) => null,
   logout: () => {},
@@ -40,7 +39,6 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider: FC<{ children: any }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [splashLoading, setSplashLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<User>();
   const [authData, setAuthData] = useState<AuthData>();
 
@@ -100,22 +98,16 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
   const isLoggedIn = async () => {
     try {
-      setSplashLoading(true);
-
       const fetchedAuthData: string | null = await SecureStore.getItemAsync(
         "authData"
       );
 
       if (fetchedAuthData) {
-        const authDataObject: AuthData = JSON.parse(fetchedAuthData);
-        const res = await authApi.refresh(authDataObject.refreshToken);
+        const oldAuthData: AuthData = await JSON.parse(fetchedAuthData);
+        const res = await authApi.refresh(oldAuthData.refreshToken);
+        if (!res.ok) return;
 
         const data: any = res.data;
-
-        if (!res.ok) {
-          setSplashLoading(false);
-          return;
-        }
 
         // const [userRes] = await Promise.all([
         // userApi.getUser(data.userId),
@@ -126,10 +118,8 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
         setAuthData(data as AuthData);
         apiClient.setHeader("Authorization", `JWT ${data.accessToken}`);
       }
-
-      setSplashLoading(false);
     } catch (error) {
-      setSplashLoading(false);
+      console.log(error);
     }
   };
 
@@ -146,13 +136,17 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
     setUserData(res.data as User);
   };
 
+  const onLaunch = async () => {
+    await isLoggedIn();
+    await SplashScreen.hideAsync();
+  };
+
   useEffect(() => {
-    isLoggedIn();
+    onLaunch();
   }, []);
 
   const authContext: AuthContextType = {
     isLoading,
-    splashLoading,
     userData,
     authData,
     register,

@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
 import { StyleSheet, View, Text, TextProps } from "react-native";
-import theme from "../../core/theme.ts";
+import theme from "../core/theme.ts";
 
 export default function TextField(props: TextProps) {
   return (
