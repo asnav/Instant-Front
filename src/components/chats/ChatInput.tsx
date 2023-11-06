@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  TextInputProps,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import theme from "../../core/theme.ts";
 
@@ -41,7 +33,7 @@ export default function ChatInput(props: {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "whitesmoke",
+    backgroundColor: theme.colors.secondary,
     flexDirection: "row",
     justifyContent: "flex-start",
     width: "100%",
@@ -54,11 +46,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     paddingLeft: 10,
     borderRadius: 14,
-    backgroundColor: "white",
-    color: "black",
-    fontSize: 17,
-    borderColor: "lightgrey",
     borderWidth: 0.5,
+    borderColor: theme.colors.grey,
+    backgroundColor: theme.colors.background,
+    color: theme.colors.text,
+    fontSize: 17,
   },
   icon: {
     width: "12%",

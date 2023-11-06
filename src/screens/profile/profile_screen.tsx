@@ -3,18 +3,14 @@ import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { AuthContext } from "../../context/AuthContext.tsx";
 import TabTitle from "../../components/TabTitle.tsx";
 import theme from "../../core/theme.ts";
+import SubmitButton from "../../components/SubmitButton.tsx";
 
 const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
   return (
     <View style={styles.container}>
       <TabTitle>Profile</TabTitle>
-      <TouchableOpacity
-        onPress={async () => logout()}
-        style={styles.navigationButton}
-      >
-        <Text style={styles.navigationText}>Logout</Text>
-      </TouchableOpacity>
+      <SubmitButton onPress={async () => logout()}>Logout</SubmitButton>
     </View>
   );
 };

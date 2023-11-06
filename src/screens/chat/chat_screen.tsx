@@ -34,6 +34,7 @@ const ChatScreen: FC<{ route: any; navigation: any }> = ({
         data={[...chat.messages].reverse() as Array<Message>}
         keyExtractor={(message: Message) => message.messageId}
         renderItem={({ item }) => <MessageBubble message={item} />}
+        keyboardDismissMode="interactive"
       />
       <ChatInput
         value={newMessage}

@@ -1,43 +1,21 @@
+import postApi from "../api/postApi.ts";
+import fileApi from "../api/fileApi.ts";
+
 export type Post = {
-  postId: string;
-  // ownerId: string,
-  ownerName: string;
-  imageURI: string;
   text: string;
-  // likes: number,
-  // isLiked: boolean,
+  owner: string;
+  _id: string;
+  __v: number;
 };
 
-var posts: Array<Post> = [
-  {
-    postId: "65356eac0ea5fda12e30ff5c",
-    // ownerId: "653a8197bedc5888925e40e7",
-    ownerName: "asaf navon",
-    imageURI: "../../assets/cart.png",
-    text: "my first post",
-    // likes: 10,
-    // isLiked: false,
-  },
-  {
-    postId: "65356eac0ea5fda12e30ff5b",
-    // ownerId: "653a8197bedc5888925e40e7",
-    ownerName: "avraham kabala",
-    imageURI: "../../assets/icon.png",
-    text: "my first post",
-    // likes: 10,
-    // isLiked: false,
-  },
-  {
-    postId: "65356eac0ea5fda12e30ff5a",
-    // ownerId: "653a8197bedc5888925e40e7",
-    ownerName: "avraham kabala",
-    imageURI: "../../assets/icon.png",
-    text: "my first post",
-    // likes: 10,
-    // isLiked: false,
-  },
-];
+var posts: Array<Post> = new Array<Post>();
 
-export const getAllPosts = () => {
-  return posts;
+export const getAllPosts = () => posts;
+
+export const refresh = async () =>
+  (posts = (await postApi.getAllPosts()).data as Array<Post>);
+
+export const uploadPost = async (imageUri: string, text: string) => {
+  const data: Post = (await postApi.addNewPost(text)).data as Post;
+  fileApi.upload(data._id, imageUri);
 };

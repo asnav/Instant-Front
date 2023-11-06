@@ -1,8 +1,12 @@
-import { StyleSheet, Text, TextProps } from "react-native";
+import { StyleSheet, Text, TextProps, View } from "react-native";
 import theme from "../core/theme.ts";
 
 export default function Header(props: TextProps) {
-  return <Text style={styles.title}>{props.children}</Text>;
+  return (
+    <View>
+      <Text style={styles.title}>{props.children}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

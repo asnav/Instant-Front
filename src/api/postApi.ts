@@ -1,30 +1,23 @@
-// import apiClient from "./clientApi.ts";
+import apiClient from "./clientApi.ts";
 
-// const getAllPosts = async () => {
-//   return apiClient.get("/post");
-// };
+const getAllPosts = async () => {
+  return apiClient.get("/post");
+};
 
-// const getPostById = async (id: string) => {
-//   return apiClient.get("/post/" + id);
-// };
+const getUsersPosts = async (owner: string) => {
+  return apiClient.get("/post?owner=" + owner);
+};
 
-// export interface LoginInterface {
-//   identifier: string;
-//   password: string;
-// }
+const getPostById = async (id: string) => {
+  return apiClient.get("/post/" + id);
+};
 
-// const login = async (data: LoginInterface) => {
-//   return apiClient.post("/auth/login", data);
-// };
+const addNewPost = async (text: string) => {
+  return apiClient.post("/post", { text: text });
+};
 
-// const refresh = async (refreshToken: string) => {
-//   apiClient.setHeader("Authorization", `JWT ${refreshToken}`);
-//   return apiClient.get(`/auth/refresh`);
-// };
+const updatePost = async (postId: string, text: string) => {
+  return apiClient.put("/post/" + postId, { text: text });
+};
 
-// const logout = async (refreshToken: string) => {
-//   apiClient.setHeader("Authorization", `JWT ${refreshToken}`);
-//   return apiClient.get(`/auth/logout`);
-// };
-
-// export default { register, login, refresh, logout };
+export default { getAllPosts, getUsersPosts, getPostById, addNewPost, updatePost };

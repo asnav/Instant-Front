@@ -14,7 +14,18 @@ export default function SubmitButton(props: TouchableOpacityProps) {
 
   return (
     <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.button} disabled={isLoading} {...props}>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          {
+            backgroundColor: props.disabled
+              ? theme.colors.darkGrey
+              : theme.colors.primary,
+          },
+        ]}
+        disabled={isLoading}
+        {...props}
+      >
         <Text style={styles.text}>{props.children}</Text>
       </TouchableOpacity>
     </View>
@@ -27,9 +38,9 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "75%",
-    margin: 12,
-    padding: 12,
-    backgroundColor: theme.colors.primary,
+    marginVertical: 12,
+    marginHorizontal: "12.5%",
+    paddingVertical: 12,
     borderRadius: 10,
   },
   text: {

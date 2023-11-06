@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { StyleSheet, View, Image, Text, Dimensions } from "react-native";
 import theme from "../../core/theme.ts";
 import { Post } from "../../models/Post.ts";
+import { baseURL } from "../../constants/constants.ts";
 
 const PostComponent: FC<{ post: Post }> = ({ post }) => {
   return (
@@ -11,9 +12,12 @@ const PostComponent: FC<{ post: Post }> = ({ post }) => {
           source={require("../../assets/headshot.png")}
           style={styles.profilePicture}
         />
-        <Text style={styles.username}>{post.ownerName}</Text>
+        <Text style={styles.username}>{post.owner}</Text>
       </View>
-      <Image source={require("../../assets/plant.jpeg")} style={styles.image} />
+      <Image
+        source={{ uri: baseURL + "/uploads/" + post._id + ".jpg" }}
+        style={styles.image}
+      />
       <Text style={styles.text}>{post.text}</Text>
     </View>
   );
