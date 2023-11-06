@@ -9,13 +9,14 @@ const PostComponent: FC<{ post: Post }> = ({ post }) => {
     <View style={styles.container}>
       <View style={styles.ownerContainer}>
         <Image
-          source={require("../../assets/headshot.png")}
+          defaultSource={require("../../assets/headshot.png")}
+          source={{ uri: baseURL + "/uploads/" + post.ownerId + ".jpg" }}
           style={styles.profilePicture}
         />
-        <Text style={styles.username}>{post.owner}</Text>
+        <Text style={styles.username}>{post.username}</Text>
       </View>
       <Image
-        source={{ uri: baseURL + "/uploads/" + post._id + ".jpg" }}
+        source={{ uri: baseURL + "/uploads/" + post.postId + ".jpg" }}
         style={styles.image}
       />
       <Text style={styles.text}>{post.text}</Text>

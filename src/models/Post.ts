@@ -2,10 +2,10 @@ import postApi from "../api/postApi.ts";
 import fileApi from "../api/fileApi.ts";
 
 export type Post = {
+  postId: string;
   text: string;
-  owner: string;
-  _id: string;
-  __v: number;
+  ownerId: string;
+  username: string;
 };
 
 var posts: Array<Post> = new Array<Post>();
@@ -17,5 +17,5 @@ export const refresh = async () =>
 
 export const uploadPost = async (imageUri: string, text: string) => {
   const data: Post = (await postApi.addNewPost(text)).data as Post;
-  fileApi.upload(data._id, imageUri);
+  fileApi.upload(data.postId, imageUri);
 };

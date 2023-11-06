@@ -20,7 +20,7 @@ const FeedScreen: FC<{ navigation: any }> = ({ navigation }) => {
       <FlatList
         style={styles.list}
         data={posts}
-        keyExtractor={(post: Post) => post._id}
+        keyExtractor={(post: Post) => post.postId}
         renderItem={({ item }) => <PostComponent post={item} />}
       />
     </View>
