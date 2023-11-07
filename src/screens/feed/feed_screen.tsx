@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
+
 // import { ScrollView } from 'react-native-virtualized-view';
 
 import PostComponent from "../../components/posts/Post.tsx";
@@ -11,9 +13,11 @@ const FeedScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const [posts, setPosts] = useState(getAllPosts());
   const setPostsAsync = async () => setPosts(await refresh());
 
+  const isFocused = useIsFocused();
   useEffect(() => {
-    setPostsAsync();
-  }, []);
+    isFocused && console.log("refresh");
+    isFocused && setPostsAsync();
+  }, [isFocused]);
   return (
     <View style={styles.container}>
       <TabTitle>Feed</TabTitle>
