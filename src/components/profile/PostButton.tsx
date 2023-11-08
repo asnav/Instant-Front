@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { StyleSheet, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Image, TouchableOpacity, View } from "react-native";
 import theme from "../../core/theme.ts";
 import { Post } from "../../models/Post.ts";
 import { baseURL } from "../../constants/constants.ts";
@@ -8,7 +8,7 @@ const PostButton: FC<{ post: Post; navigation: any }> = ({
   post,
   navigation,
 }) => {
-  return (
+  return post.postId ? (
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigation.push("UpdatePost", { post: post })}
@@ -18,6 +18,8 @@ const PostButton: FC<{ post: Post; navigation: any }> = ({
         style={styles.image}
       />
     </TouchableOpacity>
+  ) : (
+    <View style={styles.container} />
   );
 };
 
