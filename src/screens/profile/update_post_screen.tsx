@@ -1,23 +1,31 @@
 import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { uploadPost } from "../../models/Post.ts";
-import TabTitle from "../../components/TabTitle.tsx";
+import { Post, deletePost, updatePost } from "../../models/Post.ts";
 import requestPermission from "../../utils/requestPermission";
 import SubmitButton from "../../components/SubmitButton.tsx";
 import Error from "../../components/Error.tsx";
 import theme from "../../core/theme.ts";
 import ImagePicker from "../../components/posts/ImagePicker.tsx";
+import { baseURL } from "../../constants/constants.ts";
+import { Ionicons } from "@expo/vector-icons";
 
-const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
+const UpdateScreen: FC<{ route: any; navigation: any }> = ({
+  route,
+  navigation,
+}) => {
   useEffect(() => {
     requestPermission();
   }, []);
 
+  const post: Post = route.params.post;
+
   const [isLoading, setIsLoading] = useState(false);
-  const [imageUri, setImageUri] = useState("");
-  const [description, setDescription] = useState("");
+  const [imageUri, setImageUri] = useState(
+    baseURL + "/uploads/" + post.postId + ".jpg"
+  );
+  const [description, setDescription] = useState(post.text);
   const [error, setError] = useState<string>();
   const [enableScrolling, setEnableScrolling] = useState(false);
 
@@ -25,12 +33,8 @@ const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
     try {
       if (imageUri && description) {
         setIsLoading(true);
-        await uploadPost(imageUri, description);
-        setImageUri("");
-        setDescription("");
-        setError(undefined);
-        setIsLoading(false);
-        navigation.navigate("Feed");
+        await updatePost(post.postId, imageUri, description);
+        navigation.goBack();
       } else if (!imageUri)
         setError("Text is BORING!\nadd a photo to make it pop.");
       else setError("dont you have anything to say about it?");
@@ -40,9 +44,23 @@ const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
     }
   };
 
+  const onDelete = async () => {
+    try {
+      setIsLoading(true);
+      await deletePost(post.postId);
+      navigation.goBack();
+    } catch (error) {
+      setError(error as string);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <TabTitle>Upload</TabTitle>
+      <Text style={styles.title}>Update</Text>
+      <TouchableOpacity style={styles.back} onPress={navigation.goBack}>
+        <Ionicons name={"chevron-back-outline"} size={35} color="black" />
+      </TouchableOpacity>
       <KeyboardAwareScrollView
         scrollEnabled={enableScrolling}
         keyboardShouldPersistTaps="handled"
@@ -65,7 +83,14 @@ const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
           onPress={onSubmit}
           disabled={isLoading || (!imageUri && !description)}
         >
-          Upload
+          Update
+        </SubmitButton>
+        <SubmitButton
+          style={{ backgroundColor: theme.colors.error }}
+          onPress={onDelete}
+          disabled={isLoading || (!imageUri && !description)}
+        >
+          Delete
         </SubmitButton>
         <Error>{error}</Error>
       </KeyboardAwareScrollView>
@@ -73,12 +98,27 @@ const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
   );
 };
 
-export default UploadScreen;
+export default UpdateScreen;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.background,
     flex: 1,
+  },
+  back: {
+    position: "absolute",
+    height: 40,
+    width: 40,
+    marginLeft: 10,
+    marginTop: 50,
+  },
+  title: {
+    width: "100%",
+    textAlign: "center",
+    marginTop: 50,
+    fontSize: 33,
+    color: theme.colors.text,
+    fontWeight: "bold",
   },
   description: {
     width: "95%",

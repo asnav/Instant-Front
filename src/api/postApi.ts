@@ -8,8 +8,8 @@ const getUsersPosts = async (owner: string) => {
   return apiClient.get("/post?owner=" + owner);
 };
 
-const getPostById = async (id: string) => {
-  return apiClient.get("/post/" + id);
+const getPostById = async (postId: string) => {
+  return apiClient.get("/post/" + postId);
 };
 
 const addNewPost = async (text: string) => {
@@ -20,4 +20,15 @@ const updatePost = async (postId: string, text: string) => {
   return apiClient.put("/post/" + postId, { text: text });
 };
 
-export default { getAllPosts, getUsersPosts, getPostById, addNewPost, updatePost };
+const deletePost = async (postId: string) => {
+  return apiClient.get("/post/delete/" + postId);
+};
+
+export default {
+  getAllPosts,
+  getUsersPosts,
+  getPostById,
+  addNewPost,
+  updatePost,
+  deletePost,
+};

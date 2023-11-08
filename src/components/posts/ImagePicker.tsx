@@ -18,19 +18,15 @@ const ImagePicker = (props: { imageUri: string; setImageUri: any }) => {
   };
 
   return (
-    <>
+    <TouchableOpacity onPress={imagePicker}>
       {props.imageUri ? (
-        <TouchableOpacity onPress={imagePicker}>
-          <Image style={styles.image} source={{ uri: props.imageUri }} />
-        </TouchableOpacity>
+        <Image style={styles.image} source={{ uri: props.imageUri }} />
       ) : (
         <View style={styles.image}>
-          <TouchableOpacity onPress={imagePicker}>
-            <Text style={styles.imagePickerText}>Tap to choose a photo</Text>
-          </TouchableOpacity>
+          <Text style={styles.imagePickerText}>Tap to choose a photo</Text>
         </View>
       )}
-    </>
+    </TouchableOpacity>
   );
 };
 
@@ -38,19 +34,17 @@ export default ImagePicker;
 
 const styles = StyleSheet.create({
   image: {
-    width: "100%",
-    height: "auto",
-    aspectRatio: 1,
-    marginTop: 30,
     backgroundColor: theme.colors.grey,
     justifyContent: "center",
     alignItems: "center",
+    aspectRatio: 1,
+    marginTop: 30,
+    height: "auto",
+    width: "100%",
   },
   imagePickerText: {
-    padding: "50%",
-    width: "100%",
-    fontSize: 20,
     color: theme.colors.secondaryText,
     fontWeight: "bold",
+    fontSize: 20,
   },
 });
