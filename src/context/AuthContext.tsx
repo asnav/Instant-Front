@@ -8,9 +8,11 @@ import userApi, { EditUserInterface } from "../api/userApi.ts";
 import { User } from "../utils/types/@User.ts";
 
 type AuthData = {
+  userId: string;
+  email: string;
+  username: string;
   accessToken: string;
   refreshToken: string;
-  userId: string;
 };
 
 type AuthContextType = {

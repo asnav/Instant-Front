@@ -6,42 +6,27 @@ import validators from "../../utils/validators.ts";
 import Title from "../../components/auth/Title.tsx";
 import TextField from "../../components/auth/TextField.tsx";
 import Error from "../../components/Error.tsx";
-import SubmitButton from "../../components/Buttons/SubmitButton.tsx";
+import SubmitButton from "../Buttons/SubmitButton.tsx";
 import NavigationLink from "../../components/auth/NavigationLink.tsx";
 import LottieView from "lottie-react-native";
 import theme from "../../core/theme.ts";
-import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
+import ButtonContainer from "../Buttons/ButtonContainer.tsx";
 
-const RegisterScreen: FC<{ navigation: any }> = ({ navigation }) => {
-  const { register, login, isLoading } = useContext(AuthContext);
+const ProfileArea: FC<{ isLoading: boolean }> = () => {
+  const { authData, logout } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [username, setUsername] = useState(authData?.username);
+  const [email, setEmail] = useState(authData?.email);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string>();
 
-  const onRegisterCallback = async () => {
+  const onSaveCallback = async () => {
     let err: string | undefined;
-    err = validators.usernameValidator(username);
-    if (!err) err = validators.emailValidator(email);
-    if (!err) err = validators.strongPasswordValidator(password);
-    if (!err && password != repeatPassword) err = "passwords don't match";
-    if (!err) {
-      const res = await register({
-        username: username,
-        email: email,
-        password: password,
-      });
-      err = res as string | undefined;
-    }
-    if (!err) {
-      const res = await login({
-        identifier: username,
-        password: password,
-      });
-      err = res as string | undefined;
-    }
+    err = validators.usernameValidator(username as string);
+    if (!err) err = validators.emailValidator(email as string);
+    if (!err) err = validators.strongPasswordValidator(newPassword);
     setError(err);
   };
 
@@ -49,10 +34,8 @@ const RegisterScreen: FC<{ navigation: any }> = ({ navigation }) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={-70}
     >
-      <Title>Nice to meet you 🥹</Title>
-
+      {/* 
       <TextField
         onChangeText={setUsername}
         value={username}
@@ -83,15 +66,10 @@ const RegisterScreen: FC<{ navigation: any }> = ({ navigation }) => {
 
       <Error>{error}</Error>
 
+      <SubmitButton onPress={onRegisterCallback}>Register</SubmitButton> */}
       <ButtonContainer>
-        <SubmitButton onPress={onRegisterCallback} disabled={isLoading}>
-          Register
-        </SubmitButton>
+        <SubmitButton onPress={async () => logout()}>Logout</SubmitButton>
       </ButtonContainer>
-
-      <NavigationLink onPress={() => navigation.navigate("Login")}>
-        Already have an account?
-      </NavigationLink>
       {isLoading && (
         <LottieView
           style={styles.loading}
@@ -102,6 +80,8 @@ const RegisterScreen: FC<{ navigation: any }> = ({ navigation }) => {
     </KeyboardAvoidingView>
   );
 };
+
+export default ProfileArea;
 
 const styles = StyleSheet.create({
   container: {
@@ -116,5 +96,3 @@ const styles = StyleSheet.create({
     marginTop: -15,
   },
 });
-
-export default RegisterScreen;

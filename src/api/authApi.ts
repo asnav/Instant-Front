@@ -10,6 +10,18 @@ const register = async (data: RegisterInterface) => {
   return apiClient.post("/auth/register", data);
 };
 
+const changePassword = async (oldPassword: string, newPassword: string) => {
+  return apiClient.post("/auth/change/password", { oldPassword, newPassword });
+};
+
+const changeEmail = async (email: string) => {
+  return apiClient.post("/auth/change/email", { email });
+};
+
+const changeUsername = async (username: string) => {
+  return apiClient.post("/auth/change/username", { username });
+};
+
 export interface LoginInterface {
   identifier: string;
   password: string;
@@ -29,4 +41,12 @@ const logout = async (refreshToken: string) => {
   return apiClient.get(`/auth/logout`);
 };
 
-export default { register, login, refresh, logout };
+export default {
+  register,
+  changePassword,
+  changeEmail,
+  changeUsername,
+  login,
+  refresh,
+  logout,
+};

@@ -26,12 +26,11 @@ export const uploadPost = async (imageUri: string, text: string) => {
   fileApi.upload(data.postId, imageUri);
 };
 
-export const updatePost = async (
-  postId: string,
-  imageUri: string,
-  text: string
-) => {
+export const updatePostText = async (postId: string, text: string) => {
   await postApi.updatePost(postId, text);
+};
+
+export const updatePostImage = async (postId: string, imageUri: string) => {
   fileApi.upload(postId, imageUri);
 };
 

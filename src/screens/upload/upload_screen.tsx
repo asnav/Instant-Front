@@ -5,10 +5,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { uploadPost } from "../../models/Post.ts";
 import TabTitle from "../../components/TabTitle.tsx";
 import requestPermission from "../../utils/requestPermission";
-import SubmitButton from "../../components/SubmitButton.tsx";
+import SubmitButton from "../../components/Buttons/SubmitButton.tsx";
 import Error from "../../components/Error.tsx";
 import theme from "../../core/theme.ts";
 import ImagePicker from "../../components/posts/ImagePicker.tsx";
+import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
 
 const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
   useEffect(() => {
@@ -61,12 +62,15 @@ const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
           enablesReturnKeyAutomatically
           multiline
         />
-        <SubmitButton
-          onPress={onSubmit}
-          disabled={isLoading || (!imageUri && !description)}
-        >
-          Upload
-        </SubmitButton>
+
+        <ButtonContainer>
+          <SubmitButton
+            onPress={onSubmit}
+            disabled={isLoading || (!imageUri && !description)}
+          >
+            Upload
+          </SubmitButton>
+        </ButtonContainer>
         <Error>{error}</Error>
       </KeyboardAwareScrollView>
     </View>

@@ -5,10 +5,11 @@ import { AuthContext } from "../../context/AuthContext.tsx";
 import Title from "../../components/auth/Title.tsx";
 import TextField from "../../components/auth/TextField.tsx";
 import Error from "../../components/Error.tsx";
-import SubmitButton from "../../components/SubmitButton.tsx";
+import SubmitButton from "../../components/Buttons/SubmitButton.tsx";
 import NavigationLink from "../../components/auth/NavigationLink.tsx";
 import LottieView from "lottie-react-native";
 import theme from "../../core/theme.ts";
+import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
 
 const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { login, isLoading } = useContext(AuthContext);
@@ -49,7 +50,11 @@ const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
 
       <Error>{error}</Error>
 
-      <SubmitButton onPress={onLoginCallback}>Login</SubmitButton>
+      <ButtonContainer>
+        <SubmitButton onPress={onLoginCallback} disabled={isLoading}>
+          Login
+        </SubmitButton>
+      </ButtonContainer>
 
       <NavigationLink onPress={() => navigation.navigate("Register")}>
         Don't have an account yet?

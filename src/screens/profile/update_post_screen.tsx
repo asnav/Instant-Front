@@ -2,14 +2,21 @@ import React, { FC, useEffect, useState } from "react";
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Post, deletePost, updatePost } from "../../models/Post.ts";
+import {
+  Post,
+  deletePost,
+  updatePostText,
+  updatePostImage,
+} from "../../models/Post.ts";
 import requestPermission from "../../utils/requestPermission";
-import SubmitButton from "../../components/SubmitButton.tsx";
+import SubmitButton from "../../components/Buttons/SubmitButton.tsx";
 import Error from "../../components/Error.tsx";
 import theme from "../../core/theme.ts";
 import ImagePicker from "../../components/posts/ImagePicker.tsx";
 import { baseURL } from "../../constants/constants.ts";
 import { Ionicons } from "@expo/vector-icons";
+import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
+import ButtonSpacer from "../../components/Buttons/ButtonSpacer.tsx";
 
 const UpdateScreen: FC<{ route: any; navigation: any }> = ({
   route,
@@ -20,11 +27,10 @@ const UpdateScreen: FC<{ route: any; navigation: any }> = ({
   }, []);
 
   const post: Post = route.params.post;
+  const oldImageUri: string = baseURL + "/uploads/" + post.postId + ".jpg";
 
   const [isLoading, setIsLoading] = useState(false);
-  const [imageUri, setImageUri] = useState(
-    baseURL + "/uploads/" + post.postId + ".jpg"
-  );
+  const [imageUri, setImageUri] = useState(oldImageUri);
   const [description, setDescription] = useState(post.text);
   const [error, setError] = useState<string>();
   const [enableScrolling, setEnableScrolling] = useState(false);
@@ -33,7 +39,10 @@ const UpdateScreen: FC<{ route: any; navigation: any }> = ({
     try {
       if (imageUri && description) {
         setIsLoading(true);
-        await updatePost(post.postId, imageUri, description);
+        if (post.text != description)
+          await updatePostText(post.postId, description);
+        if (imageUri != oldImageUri)
+          await updatePostImage(post.postId, imageUri);
         navigation.goBack();
       } else if (!imageUri)
         setError("Text is BORING!\nadd a photo to make it pop.");
@@ -79,19 +88,24 @@ const UpdateScreen: FC<{ route: any; navigation: any }> = ({
           enablesReturnKeyAutomatically
           multiline
         />
-        <SubmitButton
-          onPress={onSubmit}
-          disabled={isLoading || (!imageUri && !description)}
-        >
-          Update
-        </SubmitButton>
-        <SubmitButton
-          style={{ backgroundColor: theme.colors.error }}
-          onPress={onDelete}
-          disabled={isLoading || (!imageUri && !description)}
-        >
-          Delete
-        </SubmitButton>
+        <ButtonContainer>
+          <SubmitButton
+            onPress={onSubmit}
+            disabled={
+              isLoading || (post.text == description && imageUri == oldImageUri)
+            }
+          >
+            Update
+          </SubmitButton>
+          <ButtonSpacer />
+          <SubmitButton
+            style={{ backgroundColor: theme.colors.error }}
+            onPress={onDelete}
+            disabled={isLoading || (!imageUri && !description)}
+          >
+            Delete
+          </SubmitButton>
+        </ButtonContainer>
         <Error>{error}</Error>
       </KeyboardAwareScrollView>
     </View>
