@@ -4,7 +4,6 @@ import * as SplashScreen from "expo-splash-screen";
 
 import apiClient from "../api/clientApi.ts";
 import authApi, { RegisterInterface, LoginInterface } from "../api/authApi.ts";
-import userApi, { EditUserInterface } from "../api/userApi.ts";
 import { User } from "../utils/types/@User.ts";
 
 type AuthData = {
@@ -25,8 +24,6 @@ type AuthContextType = {
   login: (userDetails: LoginInterface) => Promise<undefined | string> | null;
   logout: () => void;
   toggleLoading: () => void;
-  editUserInfo: (userId: string, data: EditUserInterface) => void;
-  getUserInfo: (id: string) => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -35,13 +32,10 @@ export const AuthContext = createContext<AuthContextType>({
   login: (userDetails: LoginInterface) => null,
   logout: () => {},
   toggleLoading: () => {},
-  editUserInfo: () => null,
-  getUserInfo: () => null,
 });
 
 export const AuthProvider: FC<{ children: any }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [userData, setUserData] = useState<User>();
   const [authData, setAuthData] = useState<AuthData>();
 
   const register = async (
@@ -128,15 +122,6 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
   const toggleLoading = (val?: boolean) =>
     setIsLoading((prevState) => val || !prevState);
 
-  const editUserInfo = async (userId: string, data: EditUserInterface) => {
-    await userApi.editUserInfo(userId, data);
-    getUserInfo(userId);
-  };
-
-  const getUserInfo = async (userId: string) => {
-    const res = await userApi.getUser(userId);
-    setUserData(res.data as User);
-  };
 
   const onLaunch = async () => {
     await isLoggedIn();
@@ -149,13 +134,10 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
   const authContext: AuthContextType = {
     isLoading,
-    userData,
     authData,
     register,
     login,
     logout,
-    getUserInfo,
-    editUserInfo,
     toggleLoading,
   };
 

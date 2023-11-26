@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { StyleSheet, View, Image, Text, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Text } from "react-native";
 import theme from "../../core/theme.ts";
 import { Post } from "../../models/Post.ts";
 import { baseURL } from "../../constants/constants.ts";

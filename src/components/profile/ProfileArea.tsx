@@ -1,83 +1,119 @@
-import React, { useState, FC, useContext } from "react";
-import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import React, { useState, useContext } from "react";
+import { StyleSheet, View, Image, TextInput, Text } from "react-native";
 import { AuthContext } from "../../context/AuthContext.tsx";
+import { baseURL } from "../../constants/constants.ts";
 
-import validators from "../../utils/validators.ts";
-import Title from "../../components/auth/Title.tsx";
-import TextField from "../../components/auth/TextField.tsx";
-import Error from "../../components/Error.tsx";
-import SubmitButton from "../Buttons/SubmitButton.tsx";
-import NavigationLink from "../../components/auth/NavigationLink.tsx";
-import LottieView from "lottie-react-native";
 import theme from "../../core/theme.ts";
 import ButtonContainer from "../Buttons/ButtonContainer.tsx";
+import ButtonSpacer from "../Buttons/ButtonSpacer.tsx";
+import SubmitButton from "../Buttons/SubmitButton.tsx";
+import ImagePicker from "./ImagePicker.tsx";
+import Error from "../../components/Error.tsx";
 
-const ProfileArea: FC<{ isLoading: boolean }> = () => {
-  const { authData, logout } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
-
+import authApi from "../../api/authApi.ts";
+import { updatePostImage } from "../../models/Post.ts";
+const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
+  const { logout, authData } = useContext(AuthContext);
+  const [editMode, setEditMode] = useState(false);
+  const imageUri: string = baseURL + "/uploads/" + authData?.userId + ".jpg";
+  const [localImageUri, setLocalImageUri] = useState(imageUri);
   const [username, setUsername] = useState(authData?.username);
   const [email, setEmail] = useState(authData?.email);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string>();
 
-  const onSaveCallback = async () => {
-    let err: string | undefined;
-    err = validators.usernameValidator(username as string);
-    if (!err) err = validators.emailValidator(email as string);
-    if (!err) err = validators.strongPasswordValidator(newPassword);
-    setError(err);
+  const onSubmitEditing = () => {
+    username != authData?.username &&
+      authApi.changeUsername(username as string);
+    email != authData?.email && authApi.changeEmail(email as string);
+    newPassword != "" && authApi.changePassword(oldPassword, newPassword);
+    imageUri != localImageUri &&
+      updatePostImage(authData?.userId as string, localImageUri);
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      {/* 
-      <TextField
-        onChangeText={setUsername}
-        value={username}
-        placeholder={"Username"}
-      />
-
-      <TextField
-        onChangeText={setEmail}
-        value={email}
-        placeholder={"Email"}
-        autoComplete="email"
-        inputMode="email"
-      />
-
-      <TextField
-        onChangeText={setPassword}
-        value={password}
-        placeholder={"Password"}
-        autoComplete="current-password"
-      />
-
-      <TextField
-        onChangeText={setRepeatPassword}
-        value={repeatPassword}
-        placeholder={"Repeat Password"}
-        autoComplete="current-password"
-      />
-
-      <Error>{error}</Error>
-
-      <SubmitButton onPress={onRegisterCallback}>Register</SubmitButton> */}
+    <View style={styles.container}>
+      {/* Profile Details */}
+      <View style={styles.profileArea}>
+        {!editMode ? (
+          <>
+            <Image
+              defaultSource={require("../../assets/headshot.png")}
+              source={{ uri: imageUri }}
+              style={styles.profilePicture}
+            />
+            <View style={styles.details}>
+              <Text style={styles.text}>{authData?.username}</Text>
+              <Text style={styles.text}>{authData?.email}</Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <ImagePicker
+              imageUri={localImageUri}
+              setImageUri={setLocalImageUri}
+            />
+            <View style={styles.details}>
+              <TextInput
+                style={styles.field}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+                editable={!props.isLoading}
+                enablesReturnKeyAutomatically
+              />
+              <TextInput
+                style={styles.field}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                editable={!props.isLoading}
+                enablesReturnKeyAutomatically
+              />
+              <TextInput
+                style={styles.field}
+                placeholder="Update Password"
+                value={newPassword}
+                onChangeText={setNewPassword}
+                editable={!props.isLoading}
+                enablesReturnKeyAutomatically
+              />
+              <TextInput
+                style={styles.field}
+                placeholder="Repeat Password"
+                value={oldPassword}
+                onChangeText={setOldPassword}
+                editable={!props.isLoading}
+                enablesReturnKeyAutomatically
+              />
+              <Error>{error}</Error>
+            </View>
+          </>
+        )}
+      </View>
       <ButtonContainer>
-        <SubmitButton onPress={async () => logout()}>Logout</SubmitButton>
+        <SubmitButton
+          onPress={() => {
+            setEditMode(!editMode);
+            editMode && onSubmitEditing();
+          }}
+        >
+          {!editMode ? "Edit" : "Done"}
+        </SubmitButton>
+        {!editMode && (
+          <>
+            <ButtonSpacer />
+            <SubmitButton
+              onPress={async () => logout()}
+              disabled={props.isLoading}
+            >
+              Logout
+            </SubmitButton>
+          </>
+        )}
       </ButtonContainer>
-      {isLoading && (
-        <LottieView
-          style={styles.loading}
-          source={require("../../assets/loading.json")}
-          autoPlay
-        />
-      )}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -90,9 +126,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: theme.colors.background,
   },
-  loading: {
-    width: 100,
+  profileArea: {
+    flex: 1,
+    flexDirection: "row",
+    width: "85%",
+  },
+  profilePicture: {
     height: 100,
-    marginTop: -15,
+    width: 100,
+    borderRadius: 50,
+    marginTop: 10,
+  },
+  details: {
+    flex: 1,
+    flexDirection: "column",
+    width: "100%",
+    paddingLeft: 10,
+  },
+  field: {
+    marginVertical: 5,
+    padding: 5,
+    borderRadius: 9,
+    borderWidth: 0.5,
+    borderColor: theme.colors.grey,
+    backgroundColor: theme.colors.background,
+    color: theme.colors.text,
+    fontSize: 17,
+  },
+  text: {
+    marginVertical: 5,
+    padding: 5,
+    backgroundColor: theme.colors.background,
+    color: theme.colors.text,
+    fontSize: 17,
+    fontWeight: "bold",
   },
 });
