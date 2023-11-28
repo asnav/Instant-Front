@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { StyleSheet, Image, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image } from 'expo-image';
 import theme from "../../core/theme.ts";
 import { Post } from "../../models/Post.ts";
 import { baseURL } from "../../constants/constants.ts";

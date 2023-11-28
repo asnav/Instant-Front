@@ -1,5 +1,7 @@
 import React, { FC } from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
+import { Image } from "expo-image";
+
 import theme from "../../core/theme.ts";
 import { Post } from "../../models/Post.ts";
 import { baseURL } from "../../constants/constants.ts";
@@ -9,7 +11,8 @@ const PostComponent: FC<{ post: Post }> = ({ post }) => {
     <View style={styles.container}>
       <View style={styles.ownerContainer}>
         <Image
-          defaultSource={require("../../assets/headshot.png")}
+          placeholder={require("../../assets/headshot.png")}
+          placeholderContentFit="contain"
           source={{ uri: baseURL + "/uploads/" + post.ownerId + ".jpg" }}
           style={styles.profilePicture}
         />

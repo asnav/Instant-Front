@@ -10,13 +10,15 @@ export type Post = {
 
 var allPosts: Array<Post> = new Array<Post>();
 var myPosts: Array<Post> = new Array<Post>();
+export { allPosts, myPosts };
 
 export const getAllPosts = async () =>
-  (allPosts = (await postApi.getAllPosts()).data as Array<Post>).reverse();
-
+  (allPosts = ((await postApi.getAllPosts()).data as Array<Post>).reverse());
+  
 export const getMyPosts = async (userId: string) =>
-  (myPosts = (await postApi.getUsersPosts(userId))
-    .data as Array<Post>).reverse();
+  (myPosts = (
+    (await postApi.getUsersPosts(userId)).data as Array<Post>
+  ).reverse());
 
 export const getPost = async (postId: string) =>
   (await postApi.getPostById(postId)).data as Post;

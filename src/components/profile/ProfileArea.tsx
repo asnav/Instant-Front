@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, View, Image, TextInput, Text } from "react-native";
+import { StyleSheet, View, TextInput, Text } from "react-native";
+import { Image } from "expo-image";
+
 import { AuthContext } from "../../context/AuthContext.tsx";
 import { baseURL } from "../../constants/constants.ts";
 
@@ -39,7 +41,8 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
         {!editMode ? (
           <>
             <Image
-              defaultSource={require("../../assets/headshot.png")}
+              placeholder={require("../../assets/headshot.png")}
+              placeholderContentFit="contain"
               source={{ uri: imageUri }}
               style={styles.profilePicture}
             />
@@ -93,11 +96,30 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
         )}
       </View>
       <ButtonContainer>
+        {editMode && (
+          <>
+            <SubmitButton
+              onPress={() => setEditMode(!editMode)}
+              disabled={props.isLoading}
+            >
+              Cancel
+            </SubmitButton>
+            <ButtonSpacer />
+          </>
+        )}
         <SubmitButton
           onPress={() => {
             setEditMode(!editMode);
             editMode && onSubmitEditing();
           }}
+          disabled={
+            props.isLoading ||
+            (username == authData?.username &&
+              email == authData?.email &&
+              newPassword == "" &&
+              imageUri == localImageUri &&
+              editMode)
+          }
         >
           {!editMode ? "Edit" : "Done"}
         </SubmitButton>

@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext.tsx";
-import { getMyPosts, Post } from "../../models/Post.ts";
+import { getMyPosts, myPosts } from "../../models/Post.ts";
 
 import TabTitle from "../../components/TabTitle.tsx";
 import { ScrollView } from "react-native-virtualized-view";
@@ -14,9 +14,12 @@ import theme from "../../core/theme.ts";
 const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { authData } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [posts, setPosts] = useState(new Array<Post>());
-  const setPostsAsync = async () =>
-    setPosts(await getMyPosts(authData?.userId as string));
+
+  const [posts, setPosts] = useState(myPosts);
+  const setPostsAsync = async () => {
+    const response = await getMyPosts(authData?.userId as string);
+    response != posts && setPosts(response);
+  };
 
   const isFocused = useIsFocused();
   useEffect(() => {

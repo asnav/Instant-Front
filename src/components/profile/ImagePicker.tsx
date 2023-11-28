@@ -1,5 +1,7 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
+
 import { launchImageLibraryAsync } from "expo-image-picker";
 
 import theme from "../../core/theme.ts";
@@ -20,7 +22,8 @@ const ImagePicker = (props: { imageUri: string; setImageUri: any }) => {
   return (
     <TouchableOpacity onPress={imagePicker}>
       <Image
-        defaultSource={require("../../assets/headshot.png")}
+        placeholder={require("../../assets/headshot.png")}
+        placeholderContentFit="contain"
         source={{ uri: props.imageUri }}
         style={styles.profilePicture}
       />
