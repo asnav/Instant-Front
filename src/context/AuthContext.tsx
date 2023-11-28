@@ -22,6 +22,12 @@ type AuthContextType = {
     userDetails: RegisterInterface
   ) => Promise<undefined | string> | null;
   login: (userDetails: LoginInterface) => Promise<undefined | string> | null;
+  changeUsername: (username: string) => Promise<undefined | string> | null;
+  changeEmail: (email: string) => Promise<undefined | string> | null;
+  changePassword: (
+    oldPassword: string,
+    newPassword: string
+  ) => Promise<undefined | string> | null;
   logout: () => void;
   toggleLoading: () => void;
 };
@@ -30,6 +36,9 @@ export const AuthContext = createContext<AuthContextType>({
   isLoading: false,
   register: (userDetails: RegisterInterface) => null,
   login: (userDetails: LoginInterface) => null,
+  changeUsername: (username: string) => null,
+  changeEmail: (email: string) => null,
+  changePassword: (oldPassword: string, newPassword: string) => null,
   logout: () => {},
   toggleLoading: () => {},
 });
@@ -69,18 +78,51 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
       if (data) return data.message as string;
       else return "failed connecting to server";
     }
-
-    // const [userRes] = await Promise.all([
-    // userApi.getUser(data.userId),
     await SecureStore.setItemAsync("authData", JSON.stringify(data));
 
-    // ]);
-    // setUserData(userRes.data as User);
     setAuthData(data as AuthData);
 
     apiClient.setHeader("Authorization", `JWT ${data.accessToken}`);
 
     setIsLoading(false);
+    return undefined;
+  };
+
+  const changeUsername = async (username: string) => {
+    const res = await authApi.changeUsername(username);
+
+    const data: any = res.data;
+
+    if (!res.ok) {
+      if (data) return data.message as string;
+      else return "failed connecting to server";
+    }
+    setAuthData({ ...(authData as AuthData), username: username });
+    return undefined;
+  };
+
+  const changeEmail = async (email: string) => {
+    const res = await authApi.changeEmail(email);
+
+    const data: any = res.data;
+
+    if (!res.ok) {
+      if (data) return data.message as string;
+      else return "failed connecting to server";
+    }
+    setAuthData({ ...(authData as AuthData), email: email });
+    return undefined;
+  };
+
+  const changePassword = async (oldPassword: string, newPassword: string) => {
+    const res = await authApi.changePassword(oldPassword, newPassword);
+
+    const data: any = res.data;
+
+    if (!res.ok) {
+      if (data) return data.message as string;
+      else return "failed connecting to server";
+    }
     return undefined;
   };
 
@@ -105,12 +147,8 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
         const data: any = res.data;
 
-        // const [userRes] = await Promise.all([
-        // userApi.getUser(data.userId),
         await SecureStore.setItemAsync("authData", JSON.stringify(data));
 
-        // ]);
-        // setUserData(userRes.data as User);
         setAuthData(data as AuthData);
         apiClient.setHeader("Authorization", `JWT ${data.accessToken}`);
       }
@@ -121,7 +159,6 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
   const toggleLoading = (val?: boolean) =>
     setIsLoading((prevState) => val || !prevState);
-
 
   const onLaunch = async () => {
     await isLoggedIn();
@@ -137,6 +174,9 @@ export const AuthProvider: FC<{ children: any }> = ({ children }) => {
     authData,
     register,
     login,
+    changeUsername,
+    changeEmail,
+    changePassword,
     logout,
     toggleLoading,
   };

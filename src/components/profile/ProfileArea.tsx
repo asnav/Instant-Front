@@ -11,11 +11,15 @@ import ButtonSpacer from "../Buttons/ButtonSpacer.tsx";
 import SubmitButton from "../Buttons/SubmitButton.tsx";
 import ImagePicker from "./ImagePicker.tsx";
 import Error from "../../components/Error.tsx";
+import LottieView from "lottie-react-native";
 
-import authApi from "../../api/authApi.ts";
 import { updatePostImage } from "../../models/Post.ts";
-const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
-  const { logout, authData } = useContext(AuthContext);
+import { ApiResponse } from "apisauce";
+
+const ProfileArea = () => {
+  const { authData, changeUsername, changeEmail, changePassword, logout } =
+    useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const imageUri: string = baseURL + "/uploads/" + authData?.userId + ".jpg";
   const [localImageUri, setLocalImageUri] = useState(imageUri);
@@ -25,13 +29,22 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string>();
 
-  const onSubmitEditing = () => {
-    username != authData?.username &&
-      authApi.changeUsername(username as string);
-    email != authData?.email && authApi.changeEmail(email as string);
-    newPassword != "" && authApi.changePassword(oldPassword, newPassword);
-    imageUri != localImageUri &&
-      updatePostImage(authData?.userId as string, localImageUri);
+  const onSubmitEditing = async () => {
+    setIsLoading(true);
+    let err: string | undefined;
+    if (username != authData?.username)
+      err = (await changeUsername(username as string)) as string | undefined;
+    if (!err && email != authData?.email)
+      err = (await changeEmail(email as string)) as string | undefined;
+    if (!err && newPassword != "")
+      err = (await changePassword(oldPassword, newPassword)) as
+        | string
+        | undefined;
+    if (!err && imageUri != localImageUri)
+      await updatePostImage(authData?.userId as string, localImageUri);
+    setError(err);
+    setIsLoading(false);
+    if (!err) setEditMode(false);
   };
 
   return (
@@ -63,7 +76,7 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
-                editable={!props.isLoading}
+                editable={!isLoading}
                 enablesReturnKeyAutomatically
               />
               <TextInput
@@ -71,36 +84,36 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
                 placeholder="Email"
                 value={email}
                 onChangeText={setEmail}
-                editable={!props.isLoading}
+                editable={!isLoading}
                 enablesReturnKeyAutomatically
               />
               <TextInput
                 style={styles.field}
-                placeholder="Update Password"
-                value={newPassword}
-                onChangeText={setNewPassword}
-                editable={!props.isLoading}
-                enablesReturnKeyAutomatically
-              />
-              <TextInput
-                style={styles.field}
-                placeholder="Repeat Password"
+                placeholder="Old Password"
                 value={oldPassword}
                 onChangeText={setOldPassword}
-                editable={!props.isLoading}
+                editable={!isLoading}
                 enablesReturnKeyAutomatically
               />
-              <Error>{error}</Error>
+              <TextInput
+                style={styles.field}
+                placeholder="New Password"
+                value={newPassword}
+                onChangeText={setNewPassword}
+                editable={!isLoading}
+                enablesReturnKeyAutomatically
+              />
             </View>
           </>
         )}
       </View>
+      {editMode && <Error>{error}</Error>}
       <ButtonContainer>
         {editMode && (
           <>
             <SubmitButton
-              onPress={() => setEditMode(!editMode)}
-              disabled={props.isLoading}
+              onPress={() => setEditMode(false)}
+              disabled={isLoading}
             >
               Cancel
             </SubmitButton>
@@ -109,11 +122,10 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
         )}
         <SubmitButton
           onPress={() => {
-            setEditMode(!editMode);
-            editMode && onSubmitEditing();
+            editMode ? onSubmitEditing() : setEditMode(true);
           }}
           disabled={
-            props.isLoading ||
+            isLoading ||
             (username == authData?.username &&
               email == authData?.email &&
               newPassword == "" &&
@@ -126,15 +138,21 @@ const ProfileArea = (props: { isLoading: boolean; setIsLoading: Function }) => {
         {!editMode && (
           <>
             <ButtonSpacer />
-            <SubmitButton
-              onPress={async () => logout()}
-              disabled={props.isLoading}
-            >
+            <SubmitButton onPress={async () => logout()} disabled={isLoading}>
               Logout
             </SubmitButton>
           </>
         )}
       </ButtonContainer>
+      {isLoading && (
+        <View style={styles.animation_container}>
+          <LottieView
+            style={styles.loading}
+            source={require("../../assets/loading.json")}
+            autoPlay
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -182,5 +200,16 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: 17,
     fontWeight: "bold",
+  },
+  animation_container: {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loading: {
+    width: 200,
+    position: "absolute",
   },
 });

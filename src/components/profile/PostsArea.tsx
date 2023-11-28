@@ -18,7 +18,6 @@ const formatData = (data: Array<Post>) => {
 const PostsArea: FC<{
   posts: Array<Post>;
   navigation: any;
-  isLoading: boolean;
 }> = ({ posts, navigation }) => {
   return (
     <FlatList
