@@ -14,7 +14,7 @@ export { allPosts, myPosts };
 
 export const getAllPosts = async () =>
   (allPosts = ((await postApi.getAllPosts()).data as Array<Post>).reverse());
-  
+
 export const getMyPosts = async (userId: string) =>
   (myPosts = (
     (await postApi.getUsersPosts(userId)).data as Array<Post>
@@ -25,7 +25,7 @@ export const getPost = async (postId: string) =>
 
 export const uploadPost = async (imageUri: string, text: string) => {
   const data: Post = (await postApi.addNewPost(text)).data as Post;
-  fileApi.upload(data.postId, imageUri);
+  await fileApi.upload(data.postId, imageUri);
 };
 
 export const updatePostText = async (postId: string, text: string) => {
