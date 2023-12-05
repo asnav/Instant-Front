@@ -1,8 +1,9 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext.tsx";
 import { getMyPosts, myPosts } from "../../models/Post.ts";
+import { Post } from "../../models/Post.ts";
 
 import TabTitle from "../../components/TabTitle.tsx";
 import { ScrollView } from "react-native-virtualized-view";
@@ -10,6 +11,19 @@ import ProfileArea from "../../components/profile/ProfileArea.tsx";
 import PostsArea from "../../components/profile/PostsArea.tsx";
 import theme from "../../core/theme.ts";
 import LoadingLottie from "../../components/LoadingLottie.tsx";
+import PostButton from "../../components/Buttons/PostButton.tsx";
+
+const formatData = (data: Array<Post>) => {
+  const blank: Post = {
+    postId: "",
+    text: "",
+    ownerId: "",
+    username: "",
+  };
+  if (data.length % 3 == 0) return data;
+  if (data.length % 3 == 2) return [...data, blank];
+  if (data.length % 3 == 1) return [...data, blank, blank];
+};
 
 const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { authData } = useContext(AuthContext);
@@ -29,10 +43,17 @@ const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TabTitle>Profile</TabTitle>
-      <ScrollView>
-        <ProfileArea isLoading={isLoading} setIsLoading={setIsLoading} />
-        <PostsArea posts={posts} navigation={navigation} />
-      </ScrollView>
+      <FlatList
+        ListHeaderComponent={
+          <ProfileArea isLoading={isLoading} setIsLoading={setIsLoading} />
+        }
+        data={formatData(posts)}
+        keyExtractor={(post: Post) => post.postId}
+        renderItem={({ item }) => (
+          <PostButton post={item} navigation={navigation} />
+        )}
+        numColumns={3}
+      />
       {isLoading && <LoadingLottie />}
     </View>
   );
