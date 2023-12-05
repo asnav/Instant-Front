@@ -33,7 +33,7 @@ export const updatePostText = async (postId: string, text: string) => {
 };
 
 export const updatePostImage = async (postId: string, imageUri: string) => {
-  fileApi.upload(postId, imageUri);
+  await fileApi.upload(postId, imageUri);
 };
 
 export const deletePost = async (postId: string) => {

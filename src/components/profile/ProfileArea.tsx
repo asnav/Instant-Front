@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, FC } from "react";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { Image } from "expo-image";
 
@@ -11,15 +11,15 @@ import ButtonSpacer from "../Buttons/ButtonSpacer.tsx";
 import SubmitButton from "../Buttons/SubmitButton.tsx";
 import ImagePicker from "./ImagePicker.tsx";
 import Error from "../../components/Error.tsx";
-import LottieView from "lottie-react-native";
 
 import { updatePostImage } from "../../models/Post.ts";
-import { ApiResponse } from "apisauce";
 
-const ProfileArea = () => {
+const ProfileArea: FC<{ isLoading: boolean; setIsLoading: Function }> = ({
+  isLoading,
+  setIsLoading,
+}) => {
   const { authData, changeUsername, changeEmail, changePassword, logout } =
     useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const imageUri: string = baseURL + "/uploads/" + authData?.userId + ".jpg";
   const [localImageUri, setLocalImageUri] = useState(imageUri);
@@ -41,15 +41,21 @@ const ProfileArea = () => {
         | string
         | undefined;
     if (!err && imageUri != localImageUri)
-      await updatePostImage(authData?.userId as string, localImageUri);
+      err = (await updatePostImage(
+        authData?.userId as string,
+        localImageUri
+      )) as string | undefined;
     setError(err);
     setIsLoading(false);
-    if (!err) setEditMode(false);
+    if (!err) {
+      setEditMode(false);
+      await Image.clearMemoryCache();
+      setLocalImageUri(imageUri);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Profile Details */}
       <View style={styles.profileArea}>
         {!editMode ? (
           <>
@@ -57,6 +63,7 @@ const ProfileArea = () => {
               placeholder={require("../../assets/headshot.png")}
               placeholderContentFit="contain"
               source={{ uri: imageUri }}
+              cachePolicy={"memory"}
               style={styles.profilePicture}
             />
             <View style={styles.details}>
@@ -144,15 +151,6 @@ const ProfileArea = () => {
           </>
         )}
       </ButtonContainer>
-      {isLoading && (
-        <View style={styles.animation_container}>
-          <LottieView
-            style={styles.loading}
-            source={require("../../assets/loading.json")}
-            autoPlay
-          />
-        </View>
-      )}
     </View>
   );
 };
@@ -200,16 +198,5 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: 17,
     fontWeight: "bold",
-  },
-  animation_container: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loading: {
-    width: 200,
-    position: "absolute",
   },
 });

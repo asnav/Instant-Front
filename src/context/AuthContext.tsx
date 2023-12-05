@@ -4,7 +4,6 @@ import * as SplashScreen from "expo-splash-screen";
 
 import apiClient from "../api/clientApi.ts";
 import authApi, { RegisterInterface, LoginInterface } from "../api/authApi.ts";
-import { User } from "../utils/types/@User.ts";
 
 type AuthData = {
   userId: string;
@@ -16,7 +15,6 @@ type AuthData = {
 
 type AuthContextType = {
   isLoading: boolean;
-  userData?: User;
   authData?: AuthData;
   register: (
     userDetails: RegisterInterface

@@ -1,10 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
-
 import { launchImageLibraryAsync } from "expo-image-picker";
-
-import theme from "../../core/theme.ts";
 
 const ImagePicker = (props: { imageUri: string; setImageUri: any }) => {
   const imagePicker = async () => {
@@ -13,6 +10,7 @@ const ImagePicker = (props: { imageUri: string; setImageUri: any }) => {
       if (!res.canceled && res.assets.length > 0) {
         const uri = res.assets[0].uri;
         props.setImageUri(uri);
+        await Image.clearMemoryCache();
       }
     } catch (err) {
       console.log("open camera error:" + err);
@@ -25,6 +23,7 @@ const ImagePicker = (props: { imageUri: string; setImageUri: any }) => {
         placeholder={require("../../assets/headshot.png")}
         placeholderContentFit="contain"
         source={{ uri: props.imageUri }}
+        cachePolicy={"memory"}
         style={styles.profilePicture}
       />
     </TouchableOpacity>

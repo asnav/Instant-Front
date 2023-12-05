@@ -9,10 +9,12 @@ import { ScrollView } from "react-native-virtualized-view";
 import ProfileArea from "../../components/profile/ProfileArea.tsx";
 import PostsArea from "../../components/profile/PostsArea.tsx";
 import theme from "../../core/theme.ts";
+import LoadingLottie from "../../components/LoadingLottie.tsx";
 
 const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { authData } = useContext(AuthContext);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState(myPosts);
   const setPostsAsync = async () => {
     const response = await getMyPosts(authData?.userId as string);
@@ -28,9 +30,10 @@ const ProfileScreen: FC<{ navigation: any }> = ({ navigation }) => {
     <View style={styles.container}>
       <TabTitle>Profile</TabTitle>
       <ScrollView>
-        <ProfileArea />
+        <ProfileArea isLoading={isLoading} setIsLoading={setIsLoading} />
         <PostsArea posts={posts} navigation={navigation} />
       </ScrollView>
+      {isLoading && <LoadingLottie />}
     </View>
   );
 };

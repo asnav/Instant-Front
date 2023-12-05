@@ -10,7 +10,7 @@ import Error from "../../components/Error.tsx";
 import theme from "../../core/theme.ts";
 import ImagePicker from "../../components/posts/ImagePicker.tsx";
 import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
-import LottieView from "lottie-react-native";
+import LoadingLottie from "../../components/LoadingLottie.tsx";
 
 const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
   useEffect(() => {
@@ -74,15 +74,7 @@ const UploadScreen: FC<{ navigation: any }> = ({ navigation }) => {
         </ButtonContainer>
         <Error>{error}</Error>
       </KeyboardAwareScrollView>
-      {isLoading && (
-        <View style={styles.animation_container}>
-          <LottieView
-            style={styles.loading}
-            source={require("../../assets/loading.json")}
-            autoPlay
-          />
-        </View>
-      )}
+      {isLoading && <LoadingLottie />}
     </View>
   );
 };
@@ -106,16 +98,5 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     color: theme.colors.text,
     fontSize: 17,
-  },
-  animation_container: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loading: {
-    width: 200,
-    position: "absolute",
   },
 });

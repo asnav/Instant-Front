@@ -14,6 +14,7 @@ const PostComponent: FC<{ post: Post }> = ({ post }) => {
           placeholder={require("../../assets/headshot.png")}
           placeholderContentFit="contain"
           source={{ uri: baseURL + "/uploads/" + post.ownerId + ".jpg" }}
+          cachePolicy={"memory"}
           style={styles.profilePicture}
         />
         <Text style={styles.username}>{post.username}</Text>

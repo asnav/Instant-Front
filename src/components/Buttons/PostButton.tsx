@@ -16,6 +16,7 @@ const PostButton: FC<{ post: Post; navigation: any }> = ({
     >
       <Image
         source={{ uri: baseURL + "/uploads/" + post.postId + ".jpg" }}
+        cachePolicy={"memory"}
         style={styles.image}
       />
     </TouchableOpacity>

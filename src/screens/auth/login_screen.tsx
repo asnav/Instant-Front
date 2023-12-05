@@ -7,9 +7,9 @@ import TextField from "../../components/auth/TextField.tsx";
 import Error from "../../components/Error.tsx";
 import SubmitButton from "../../components/Buttons/SubmitButton.tsx";
 import NavigationLink from "../../components/auth/NavigationLink.tsx";
-import LottieView from "lottie-react-native";
 import theme from "../../core/theme.ts";
 import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
+import LoadingLottie from "../../components/LoadingLottie.tsx";
 
 const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
   const { login, isLoading } = useContext(AuthContext);
@@ -59,13 +59,7 @@ const LoginScreen: FC<{ navigation: any }> = ({ navigation }) => {
       <NavigationLink onPress={() => navigation.navigate("Register")}>
         Don't have an account yet?
       </NavigationLink>
-      {isLoading && (
-        <LottieView
-          style={styles.loading}
-          source={require("../../assets/loading.json")}
-          autoPlay
-        />
-      )}
+      {isLoading && <LoadingLottie />}
     </KeyboardAvoidingView>
   );
 };
@@ -76,10 +70,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: theme.colors.background,
-  },
-  loading: {
-    width: 200,
-    position: "absolute",
   },
 });
 

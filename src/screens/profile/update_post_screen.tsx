@@ -11,12 +11,14 @@ import {
 import requestPermission from "../../utils/requestPermission";
 import SubmitButton from "../../components/Buttons/SubmitButton.tsx";
 import Error from "../../components/Error.tsx";
-import theme from "../../core/theme.ts";
 import ImagePicker from "../../components/posts/ImagePicker.tsx";
 import { baseURL } from "../../constants/constants.ts";
 import { Ionicons } from "@expo/vector-icons";
 import ButtonContainer from "../../components/Buttons/ButtonContainer.tsx";
 import ButtonSpacer from "../../components/Buttons/ButtonSpacer.tsx";
+import { Image } from "expo-image";
+import theme from "../../core/theme.ts";
+import LoadingLottie from "../../components/LoadingLottie.tsx";
 
 const UpdateScreen: FC<{ route: any; navigation: any }> = ({
   route,
@@ -43,6 +45,7 @@ const UpdateScreen: FC<{ route: any; navigation: any }> = ({
           await updatePostText(post.postId, description);
         if (imageUri != oldImageUri)
           await updatePostImage(post.postId, imageUri);
+        await Image.clearMemoryCache();
         navigation.goBack();
       } else if (!imageUri)
         setError("Text is BORING!\nadd a photo to make it pop.");
@@ -90,6 +93,14 @@ const UpdateScreen: FC<{ route: any; navigation: any }> = ({
         />
         <ButtonContainer>
           <SubmitButton
+            style={{ backgroundColor: theme.colors.error }}
+            onPress={onDelete}
+            disabled={isLoading || (!imageUri && !description)}
+          >
+            Delete
+          </SubmitButton>
+          <ButtonSpacer />
+          <SubmitButton
             onPress={onSubmit}
             disabled={
               isLoading || (post.text == description && imageUri == oldImageUri)
@@ -97,17 +108,10 @@ const UpdateScreen: FC<{ route: any; navigation: any }> = ({
           >
             Update
           </SubmitButton>
-          <ButtonSpacer />
-          <SubmitButton
-            style={{ backgroundColor: theme.colors.error }}
-            onPress={onDelete}
-            disabled={isLoading || (!imageUri && !description)}
-          >
-            Delete
-          </SubmitButton>
         </ButtonContainer>
         <Error>{error}</Error>
       </KeyboardAwareScrollView>
+      {isLoading && <LoadingLottie />}
     </View>
   );
 };
